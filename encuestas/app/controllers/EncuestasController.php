@@ -16,7 +16,9 @@ class EncuestasController {
     public function agregar() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->model->agregar($_POST['titulo'], $_POST['descripcion']);
-            header("Location: /dashboard.php");
+            header("Location: router.php?url=encuestas");
+            exit;
+            
         }
         include 'app/views/encuestas/agregar.php';
     }

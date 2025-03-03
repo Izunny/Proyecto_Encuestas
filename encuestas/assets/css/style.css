@@ -81,7 +81,7 @@ a:hover{
 }
 
 .index_button_one {
-    color: white;
+    color: gray;
     font-weight: bold;
     font-size: 16px;
     background-color: transparent;
@@ -96,7 +96,7 @@ a:hover{
 }
 
 .index_button_two {
-    color: white;
+    color: gray;
     font-weight: bold;
     font-size: 16px;
     background-color: #51369A;

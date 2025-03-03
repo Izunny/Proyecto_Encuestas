@@ -15,6 +15,13 @@ class EncuestasModel {
         return $stmt->execute([$titulo, $descripcion]);
     }
 
+    public function agregarPregunta($encuesta_id, $pregunta, $respuesta_a, $respuesta_b) {
+        $sql = "INSERT INTO preguntas (encuesta_id, pregunta, respuesta_a, respuesta_b) VALUES (?, ?, ?, ?)";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([$encuesta_id, $pregunta, $respuesta_a, $respuesta_b]);
+    }
+    
+
     public function obtenerPorId($id) {
         $stmt = $this->pdo->prepare("SELECT * FROM encuestas WHERE id = ?");
         $stmt->execute([$id]);
