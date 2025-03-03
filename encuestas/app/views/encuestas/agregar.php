@@ -5,31 +5,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Recoger los datos del formulario
     $titulo = $_POST['titulo'];
     $descripcion = $_POST['descripcion'];
-    
-    // Preguntas y respuestas como arrays
+    $fecha = $_POST['fecha'];  // Recoger la fecha
+
+    // Preguntas como arrays
     $preguntas = $_POST['preguntas'] ?? [];
-    $respuestas_a = $_POST['respuestas_a'] ?? [];
-    $respuestas_b = $_POST['respuestas_b'] ?? [];
 
     try {
         $pdo->beginTransaction();
 
         // Insertar la encuesta en la tabla de encuestas
-        $sql = "INSERT INTO encuestas (titulo, descripcion) VALUES (:titulo, :descripcion)";
+        $sql = "INSERT INTO encuestas (titulo, descripcion, fecha) VALUES (:titulo, :descripcion, STR_TO_DATE(:fecha, '%d/%m/%Y'))"; // Convertir la fecha al formato adecuado
         $stmt = $pdo->prepare($sql);
-        $stmt->execute(['titulo' => $titulo, 'descripcion' => $descripcion]);
-        $encuesta_id = $pdo->lastInsertId();  // Obtener el ID de la encuesta insertada
+        $stmt->execute(['titulo' => $titulo, 'descripcion' => $descripcion, 'fecha' => $fecha]);
+        $encuesta_id = $pdo->lastInsertId(); 
 
-        // Insertar las preguntas y respuestas asociadas con la encuesta
+        // Insertar las preguntas
         foreach ($preguntas as $index => $pregunta) {
-            $sql_pregunta = "INSERT INTO preguntas (encuesta_id, pregunta, respuesta_a, respuesta_b) 
-                             VALUES (:encuesta_id, :pregunta, :respuesta_a, :respuesta_b)";
+            $sql_pregunta = "INSERT INTO preguntas (encuesta_id, pregunta) VALUES (:encuesta_id, :pregunta)";
             $stmt_pregunta = $pdo->prepare($sql_pregunta);
             $stmt_pregunta->execute([
                 'encuesta_id' => $encuesta_id,
                 'pregunta' => $pregunta,
-                'respuesta_a' => $respuestas_a[$index] ?? '',
-                'respuesta_b' => $respuestas_b[$index] ?? ''
             ]);
         }
 
@@ -43,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo "<p>Error al agregar la encuesta: " . $e->getMessage() . "</p>";
     }
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -73,27 +70,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </header>
         <div class="card-body">
             <form action="router.php?url=encuestas/agregar" method="POST">
-                <div class="row">
-                    <div class="mt-4">
-                        <label>Título:</label>
-                        <input type="text" name="titulo" class="form-control" required>
-                    </div>
-                    <div class="mt-4">
-                        <label>Descripción:</label>
-                        <textarea name="descripcion" class="form-control" required></textarea>
-                    </div>
+            <div class="row">
+            <div class="form-group col-md-4">
+                <label>Título:</label>
+                <input type="text" name="titulo" class="form-control" required>
+            </div>
+            <div class="form-group col-md-4">
+                <label>Descripción:</label>
+                <textarea name="descripcion" class="form-control" required></textarea>
+            </div>
+            <div class="form-group col-md-4">
+                <label style="margin-top: 4px;">Fecha:</label>
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </span>
+                    <input type="text" data-plugin-datepicker="" class="form-control" data-input-mask="31/12/9999" placeholder="DD/MM/AAAA" name="fecha" id="fecha" readonly="readonly">
                 </div>
+            </div>
+        </div>
+
 
                 <h4 class="mt-4">Preguntas</h4>
                 <div id="panelPreguntasContainer">
-                    <!-- Preguntas dinámicas se agregarán aquí -->
+                   
                 </div>
 
                 <button type="button" class="btn btn-success mt-3" onclick="agregarPreguntaPanel()">Agregar Pregunta <i class="fa fa-plus"></i></button>
 
                 <div class="row mt-4">
                     <div class="col-md-8">
-                        <button type="submit" class="btn btn-primary">Guardar Encuesta <i class="fa fa-save"></i></button>
+                        <button type="submit" class="btn btn-primary" onclick="abrirModalGuardar()">Guardar Encuesta <i class="fa fa-save"></i></button>
                         <a href="router.php?url=encuestas" class="btn btn-danger">Cancelar <i class="fa fa-ban"></i></a>
                     </div>
                 </div>
@@ -103,18 +110,62 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </section>
 
 <script>
-    function agregarPreguntaPanel() {
-        const container = document.getElementById('panelPreguntasContainer');
-        const index = container.children.length + 1;
+    let preguntaCont = 1;
 
-        const preguntaDiv = document.createElement('div');
-        preguntaDiv.classList.add('form-group', 'mt-3');
-        preguntaDiv.innerHTML = `
-            <label>Pregunta ${index}:</label>
-            <input type="text" name="preguntas[]" class="form-control" required>
-            <button type="button" class="btn btn-danger btn-sm mt-2" onclick="this.parentNode.remove()">Eliminar</button>
-        `;
-        container.appendChild(preguntaDiv);
+    $('#fecha').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true,
+        todayHighlight: true,
+        locale: "es-ES"
+    });
+    let fecha = new Date();
+    var dia = ("0" + fecha.getDate()).slice(-2);
+    var mes = ("0" + (fecha.getMonth() + 1)).slice(-2);
+    var año = fecha.getFullYear();
+    var fechaActual = dia + "/" + mes + "/" + año;
+    var fechaFinal = dia + "/" + mes + "/" + año;
+    $('#fecha').datepicker("setDate", fechaFinal);
+
+
+    
+    function agregarPreguntaPanel() {
+    const container = document.getElementById('panelPreguntasContainer');
+    const index = container.children.length + 1;
+
+    const preguntaDiv = document.createElement('div');
+    preguntaDiv.classList.add('form-group', 'mt-3');
+    preguntaDiv.innerHTML = `
+        <label>Pregunta ${index}:</label>
+        <input type="text" name="preguntas[]" class="form-control" required>
+        
+        <button type="button" class="btn btn-danger btn-sm mt-2" onclick="this.parentNode.remove()">Eliminar</button>
+        
+        <!-- Tipo de pregunta -->
+        <div class="form-group col-md-5 mt-2">
+            <label>Tipo de pregunta:</label>
+            <select class="form-control" name="preguntaTipo${preguntaCont}" onchange="cambiarTipoPregunta(${preguntaCont}, this.value)" autocomplete="off">
+                <option value="texto">Texto</option>
+                <option value="texto_abierto">Texto abierto</option>
+                <option value="opcion_unica">Opción única</option>
+                <option value="opcion_multiple">Opción múltiple</option>
+            </select>
+        </div>
+
+        <!-- Pregunta requerida -->
+        <div class="form-group col-md-3 mt-2">
+            <label>
+                Requerida  
+                <input type="checkbox" name="preguntaRequerida${preguntaCont}" value="1">
+            </label>
+        </div>
+    `;
+    
+    container.appendChild(preguntaDiv);
+    preguntaCont++; 
+}
+
+    function abrirModalGuardar() {
+
     }
 </script>
 

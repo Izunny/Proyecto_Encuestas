@@ -2,7 +2,7 @@
 
 * {
     font-family: 'Montserrat';
-    color:white;
+    color:grey;
 }
 
 
@@ -74,6 +74,10 @@ div {
 a {
     color: white;
     transition: all 0.3s ease 0s;
+}
+
+input{
+    color: rgb(71, 71, 71);
 }
 
 a:hover{
