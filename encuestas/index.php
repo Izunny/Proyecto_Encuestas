@@ -20,8 +20,8 @@
             </div>
             
             <div class="header_two">
-                <a  href="/login"><button class = "index_button_one">Iniciar sesión</button></a>  
-                <a  href="/register"><button class = "index_button_two">Registro</button></a>
+                <a  href="./login.php"><button class = "index_button_one">Iniciar sesión</button></a>  
+                <a  href="./register.php"><button class = "index_button_two">Registro</button></a>
                  
             </div>       
                 
