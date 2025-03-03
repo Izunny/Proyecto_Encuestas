@@ -2,10 +2,10 @@
 require 'config/database.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Recoger los datos del formulario
+  
     $titulo = $_POST['titulo'];
     $descripcion = $_POST['descripcion'];
-    $fecha = $_POST['fecha'];  // Recoger la fecha
+    $fecha = $_POST['fecha'];  
 
     // Preguntas como arrays
     $preguntas = $_POST['preguntas'] ?? [];
@@ -72,12 +72,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <form action="router.php?url=encuestas/agregar" method="POST">
             <div class="row">
             <div class="form-group col-md-4">
-                <label>Título:</label>
+                <label style="margin-top: 4px;">Título:</label>
+                <div class="input-group">
                 <input type="text" name="titulo" class="form-control" required>
+                </div>
             </div>
             <div class="form-group col-md-4">
-                <label>Descripción:</label>
+                <label style="margin-top: 4px;">Descripción:</label>
+                <div class="input-group">
                 <textarea name="descripcion" class="form-control" required></textarea>
+                </div>
             </div>
             <div class="form-group col-md-4">
                 <label style="margin-top: 4px;">Fecha:</label>

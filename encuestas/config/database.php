@@ -1,7 +1,7 @@
 <?php
 
 $host = 'localhost';
-$db   = 'db_encuesta';                // Reemplaza con el nombre de tu BD
+$db   = 'db_encuestas';               
 $user = 'root';                      
 $pass = '';                          
 $charset = 'utf8mb4';
