@@ -71,19 +71,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="card-body">
             <form action="router.php?url=encuestas/agregar" method="POST">
             <div class="row">
-            <div class="form-group col-md-4">
+            <div class="column">
                 <label style="margin-top: 4px;">Título:</label>
                 <div class="input-group">
                 <input type="text" name="titulo" class="form-control" required>
                 </div>
             </div>
-            <div class="form-group col-md-4">
+            <div class="column">
                 <label style="margin-top: 4px;">Descripción:</label>
                 <div class="input-group">
                 <textarea name="descripcion" class="form-control" required></textarea>
                 </div>
             </div>
-            <div class="form-group col-md-4">
+            <div class="column">
                 <label style="margin-top: 4px;">Fecha:</label>
                 <div class="input-group">
                     <span class="input-group-addon">
