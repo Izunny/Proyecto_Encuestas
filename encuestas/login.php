@@ -35,7 +35,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Validate credentials
     if(empty($username_err) && empty($password_err)){
         // Prepare a select statement
-        $sql = "SELECT id, username, password FROM users WHERE username = ?";
+        $sql = "SELECT idusuario, username, password FROM usuarios WHERE username = ?";
         
         if($stmt = mysqli_prepare($link, $sql)){
             // Bind variables to the prepared statement as parameters
@@ -107,7 +107,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     <header class="header-container">
             
             <div class="header_one">
-                <a href="/"> <img class="logo" src="./imagenes/logo4.webp" alt="logo"></a>    
+                <a href="http://localhost/Proyecto_Encuestas/encuestas/index.php"> <img class="logo" src="./imagenes/logo4.webp" alt="logo"></a>    
                
                 <h2 class="title_page">Encuestas Dinamicas</h2>
             </div>    

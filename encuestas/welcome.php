@@ -27,7 +27,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     <header class="header-container">
             
             <div class="header_one">
-                <a href="/"> <img class="logo" src="./imagenes/logo4.webp" alt="logo"></a>    
+                <a href="http://localhost/Proyecto_Encuestas/encuestas/index.php"> <img class="logo" src="./imagenes/logo4.webp" alt="logo"></a>    
                
                 <h2 class="title_page">Encuestas Dinamicas</h2>
             </div>    

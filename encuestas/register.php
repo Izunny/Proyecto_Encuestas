@@ -16,15 +16,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $username_err = "Username can only contain letters, numbers, and underscores.";
     } else{
         
-        $sql = "SELECT id FROM users WHERE username = ?";
+        $sql = "SELECT idusuario FROM usuarios WHERE username = ?";
         
         if($stmt = mysqli_prepare($link, $sql)){
             
             mysqli_stmt_bind_param($stmt, "s", $param_username);
-            
-            
+                
             $param_username = trim($_POST["username"]);
-            
             
             if(mysqli_stmt_execute($stmt)){
                 
@@ -39,11 +37,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 echo "Oops! Something went wrong. Please try again later.";
             }
 
-            
             mysqli_stmt_close($stmt);
         }
     }
-    
     
     if(empty(trim($_POST["password"]))){
         $password_err = "Please enter a password.";     
@@ -67,7 +63,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     if(empty($username_err) && empty($password_err) && empty($confirm_password_err)){
         
         
-        $sql = "INSERT INTO users (username, password) VALUES (?, ?)";
+        $sql = "INSERT INTO usuarios (username, password) VALUES (?, ?)";
          
         if($stmt = mysqli_prepare($link, $sql)){
             
@@ -89,7 +85,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             mysqli_stmt_close($stmt);
         }
     }
-    
+
     
     mysqli_close($link);
 }
@@ -140,9 +136,38 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 <span class="invalid-feedback"><?php echo $confirm_password_err; ?></span>
             </div>
             <div class="form-group">
+                <label>Nombre</label>
+                <input type="text" name="nombre" class="form-control">
+            </div>    
+            <div class="form-group">
+                <label>Apellido paterno</label>
+                <input type="text" name="apellido_paterno" class="form-control">
+            </div>    
+            <div class="form-group">
+                <label>Apellido materno</label>
+                <input type="text" name="apellido_materno" class="form-control">
+            </div>    
+            <div class="form-group">
+                <label>Fecha nacimiento</label>
+                <input type="date" name="fecha_nacimiento" class="form-control">
+            </div>    
+            <div class="form-group">
+                <label>Correo electronico</label>
+                <input type="text" name="email" class="form-control">
+            </div>    
+            <div class="form-group">
+                <label>Telefono</label>
+                <input type="text" name="telefono" class="form-control">
+            </div>    
+            <div class="form-group">
+                <label>Genero</label>
+                <input type="text" name="genero" class="form-control">
+            </div>    
+            <div class="form-group">
                 <input type="submit" class="btn btn-primary" value="Terminar">
                 <input type="reset" class="btn btn-secondary ml-2" value="Reiniciar">
             </div>
+
             <p>¿Ya tienes una cuenta? <a href="login.php">Ingresa aqui</a>.</p>
         </form>
     </div>    
