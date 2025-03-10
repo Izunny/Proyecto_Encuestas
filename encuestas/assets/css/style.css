@@ -5,26 +5,25 @@
     color:grey;
 }
 
-html {
+html, body {
     height: 100%;
-     /* Forzar scroll si es necesario */
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to bottom, #080B18 0%, #211E3B 100%);
+    background-size: cover;
+    background-attachment: fixed; 
+    width: 100%;
+    overflow-x: hidden; 
 }
-
 
 .container {
-    min-height: 100vh; /* Asegura que el contenido se expanda */
-   
+    height: 95%;
+    min-height: 95vh; 
+    width: 95%; 
+    padding: 3%;
 }
 
-
-
-body {
-  width: 95%;
-  height: 100%;
-  position: absolute;
-  background: linear-gradient(to bottom, #080B18 0%,#211E3B 100%);
-  overflow-y: auto;
-}
 
 /*
 div {
@@ -216,7 +215,11 @@ a:hover{
 
 /* Estilos para las preguntas dinámicas */
 #panelPreguntasContainer {
-    margin-top: 1rem;
+    margin-top: 2rem;
+    background-color: rgba(88, 88, 88, 0.2);
+    border-radius: 10px;
+    padding: 0.5rem;
+    margin: 1rem;
     
 }
 
@@ -225,4 +228,30 @@ a:hover{
     gap: 0.5rem;
     margin-bottom: 0.5rem;
     padding-inline: 0.5rem;
+}
+
+/* Estilo del menú horizontal */
+.nav-menu {
+    list-style: none;
+    display: flex; /* Hace que los elementos estén en línea */
+    justify-content: center; /* Centra el menú horizontalmente */
+    background-color: #211E3B; /* Color de fondo */
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.nav-menu li {
+    margin: 0 15px; /* Espacio entre elementos */
+}
+
+.nav-menu a {
+    text-decoration: none;
+    color: white; /* Color del texto */
+    font-size: 18px;
+    font-weight: bold;
+    transition: color 0.3s ease-in-out;
+}
+
+.nav-menu a:hover {
+    color: #00c8ff; /* Color al pasar el mouse */
 }
