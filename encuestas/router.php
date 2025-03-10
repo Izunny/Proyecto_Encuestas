@@ -14,9 +14,14 @@ switch ($request) {
         $controller->agregar();
         break;
     case 'encuestas/eliminar':
-        $controller->eliminar();
+        if (isset($_GET['id'])) {
+            $controller->eliminar();
+        } else {
+            echo "ID de encuesta no proporcionado.";
+        }
         break;
     default:
         echo "Página no encontrada.";
 }
 ?>
+

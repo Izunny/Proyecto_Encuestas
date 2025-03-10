@@ -15,10 +15,33 @@ class EncuestasController {
 
     public function agregar() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $this->model->agregar($_POST['titulo'], $_POST['descripcion']);
-            header("Location: router.php?url=encuestas");
+            $titulo = $_POST['titulo'];
+            $descripcion = $_POST['descripcion'];
+            $preguntas = $_POST['preguntas'] ?? [];
+
+            // Guardar encuesta y obtener ID
+            $idEncuesta = $this->model->agregar($titulo, $descripcion);
+
+            if ($idEncuesta) {
+                foreach ($preguntas as $index => $pregunta) {
+                    $texto = $pregunta['titulo'];
+                    $tipo = $pregunta['tipo'];
+                    $requerida = isset($pregunta['requerida']) ? 1 : 0;
+
+                    // Guardar la pregunta y obtener su ID
+                    $idPregunta = $this->model->agregarPregunta($idEncuesta, $texto, $tipo, $requerida);
+
+                    if ($tipo === 'opcion_unica' || $tipo === 'opcion_multiple') {
+                        $opciones = $pregunta['opciones'] ?? [];
+                        foreach ($opciones as $opcion) {
+                            $this->model->agregarOpcion($idPregunta, $opcion);
+                        }
+                    }
+                }
+            }
+
+            header("Location: /dashboard.php");
             exit;
-            
         }
         include 'app/views/encuestas/agregar.php';
     }

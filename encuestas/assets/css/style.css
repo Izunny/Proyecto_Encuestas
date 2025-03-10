@@ -5,15 +5,25 @@
     color:grey;
 }
 
+html {
+    height: 100%;
+     /* Forzar scroll si es necesario */
+}
+
+
+.container {
+    min-height: 100vh; /* Asegura que el contenido se expanda */
+   
+}
 
 
 
-body,html {height:100%;overflow:hidden;}
 body {
-  width: 100%;
+  width: 95%;
   height: 100%;
   position: absolute;
   background: linear-gradient(to bottom, #080B18 0%,#211E3B 100%);
+  overflow-y: auto;
 }
 
 /*
@@ -166,3 +176,53 @@ a:hover{
     display: table;
     clear: both;
   }
+
+  /* Estilos para el formulario */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Ajustes para los campos en una fila */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem; 
+    
+}
+
+.col-12 {
+    flex: 1 1 100%; /* Ocupa el 100% del ancho en móviles */
+    padding-right: 1%;
+}
+
+@media screen and (min-width: 768px) {
+    .col-md-3 {
+        flex: 1 1 25%; /* Ocupa el 25% del ancho en tablets y desktop */
+    }
+    .col-md-5 {
+        flex: 1 1 50%; /* Ocupa el 50% del ancho en tablets y desktop */
+    }
+    .col-md-2 {
+        flex: 1 1 20%; /* Ocupa el 20% del ancho en tablets y desktop */
+    }
+}
+
+/* Estilos para las preguntas dinámicas */
+#panelPreguntasContainer {
+    margin-top: 1rem;
+    
+}
+
+.opcion-item {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    padding-inline: 0.5rem;
+}
