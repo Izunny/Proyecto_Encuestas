@@ -6,8 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $descripcion = $_POST['descripcion'];
     $fecha = $_POST['fecha'];
     $estado = $_POST['estado'];
-    $obras = $_POST['obras'];
-    $departamentos = $_POST['departamentos'];
+  
 
     // Preguntas como arrays
     $preguntas = $_POST['preguntas'] ?? [];
@@ -24,8 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'descripcion' => $descripcion,
             'fecha' => $fecha,
             'estado' => $estado,
-            'obra_id' => $obras,
-            'departamento_id' => $departamentos
+            
         ]);
         $encuesta_id = $pdo->lastInsertId();
 
@@ -74,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agregar Encuesta</title>
-    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="<?php echo '/encuestas/assets/css/style.css'; ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
 </head>
@@ -125,10 +123,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 
                 <button type="button" class="btn btn-success mt-3" onclick="agregarPreguntaPanel()">Agregar Pregunta <i class="fa fa-plus"></i></button>
                 
-                <div class="row mt-2">
+                <div class="row">
                     <div class="col-12">
                         <button type="submit" class="btn btn-primary">Guardar Encuesta <i class="fa fa-save"></i></button>
-                        <a href="router.php?url=encuestas" class="btn btn-danger">Cancelar <i class="fa fa-ban"></i></a>
+                        <button type="button" class="btn btn-default" onclick="Cancelar(this)">Cancelar <i class="fa fa-ban"></i></button>
                     </div>
                 </div>
             </form>
@@ -230,5 +228,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </script>
 </body>
 </html>
-<?php include dirname(__DIR__) . "/templates/scripts.php"; ?>
-<?php include dirname(__DIR__) . "/templates/footer.php"; ?>
+

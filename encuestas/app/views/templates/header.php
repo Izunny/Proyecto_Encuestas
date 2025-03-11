@@ -12,7 +12,8 @@
     <!-- Encabezado -->
     <header class="header-container">
         <div class="header_one">
-            <a href="/"> <img class="logo" src="/imagenes/logo4.webp" alt="logo"></a>    
+            <a href="/"> <img class="logo" src="<?php echo '/encuestas/imagenes/logo4.webp'; ?>" alt="logo">
+            </a>    
             <h2 class="title_page">Encuestas Dinámicas</h2>
         </div>
         <div class="header_two">
