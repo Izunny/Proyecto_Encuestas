@@ -1,4 +1,4 @@
-<<?php
+<?php
 
 require_once "config.php";
  
@@ -59,20 +59,27 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         }
     }
     
+    $nombre = trim($_POST["nombre"]);
+    $apellido_paterno = trim($_POST["apellido_paterno"]);
+    $apellido_materno = trim($_POST["apellido_materno"]);
+    $fecha_nacimiento = trim($_POST["fecha_nacimiento"]);
+    $email = trim($_POST["email"]);
+    $telefono = trim($_POST["telefono"]);
+    $genero = trim($_POST["genero"]);
   
     if(empty($username_err) && empty($password_err) && empty($confirm_password_err)){
         
         
-        $sql = "INSERT INTO usuarios (username, password) VALUES (?, ?)";
+        $sql = "INSERT INTO usuarios (username, password, nombre, apellido_paterno, apellido_materno, fecha_nacimiento, email, telefono, genero) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
          
         if($stmt = mysqli_prepare($link, $sql)){
             
-            mysqli_stmt_bind_param($stmt, "ss", $param_username, $param_password);
+            mysqli_stmt_bind_param($stmt, "sssssisis", $param_username, $param_password, $nombre, $apellido_paterno, $apellido_materno, $fecha_nacimiento,
+                                    $email, $telefono, $genero);
             
             
             $param_username = $username;
             $param_password = password_hash($password, PASSWORD_DEFAULT); 
-            
        
             if(mysqli_stmt_execute($stmt)){
                 
@@ -85,7 +92,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             mysqli_stmt_close($stmt);
         }
     }
-
     
     mysqli_close($link);
 }
