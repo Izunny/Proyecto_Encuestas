@@ -1,145 +1,91 @@
 <?php
-// Initialize the session
 session_start();
- 
-// Check if the user is already logged in, if yes then redirect him to welcome page
-if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
-    header("location: welcome.php");
-    exit;
-}
- 
-// Include config file
-require_once "config.php";
- 
-// Define variables and initialize with empty values
+require_once __DIR__ . '/config/database.php';
+
 $username = $password = "";
-$username_err = $password_err = $login_err = "";
- 
-// Processing form data when form is submitted
-if($_SERVER["REQUEST_METHOD"] == "POST"){
- 
-    // Check if username is empty
-    if(empty(trim($_POST["username"]))){
-        $username_err = "Please enter username.";
-    } else{
+$username_err = $password_err = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Validar username
+    if (empty(trim($_POST["username"]))) {
+        $username_err = "Por favor, ingresa tu usuario.";
+    } else {
         $username = trim($_POST["username"]);
     }
-    
-    // Check if password is empty
-    if(empty(trim($_POST["password"]))){
-        $password_err = "Please enter your password.";
-    } else{
+
+    // Validar contraseña
+    if (empty(trim($_POST["password"]))) {
+        $password_err = "Por favor, ingresa tu contraseña.";
+    } else {
         $password = trim($_POST["password"]);
     }
-    
-    // Validate credentials
-    if(empty($username_err) && empty($password_err)){
-        // Prepare a select statement
-        $sql = "SELECT idusuario, username, password FROM usuarios WHERE username = ?";
-        
-        if($stmt = mysqli_prepare($link, $sql)){
-            // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "s", $param_username);
-            
-            // Set parameters
-            $param_username = $username;
-            
-            // Attempt to execute the prepared statement
-            if(mysqli_stmt_execute($stmt)){
-                // Store result
-                mysqli_stmt_store_result($stmt);
-                
-                // Check if username exists, if yes then verify password
-                if(mysqli_stmt_num_rows($stmt) == 1){                    
-                    // Bind result variables
-                    mysqli_stmt_bind_result($stmt, $id, $username, $hashed_password);
-                    if(mysqli_stmt_fetch($stmt)){
-                        if(password_verify($password, $hashed_password)){
-                            // Password is correct, so start a new session
-                            session_start();
-                            
-                            // Store data in session variables
-                            $_SESSION["loggedin"] = true;
-                            $_SESSION["id"] = $id;
-                            $_SESSION["username"] = $username;                            
-                            
-                            // Redirect user to welcome page
-                            header("location: welcome.php");
-                        } else{
-                            // Password is not valid, display a generic error message
-                            $login_err = "Invalid username or password.";
-                        }
-                    }
-                } else{
-                    // Username doesn't exist, display a generic error message
-                    $login_err = "Invalid username or password.";
-                }
-            } else{
-                echo "Oops! Something went wrong. Please try again later.";
-            }
 
-            // Close statement
-            mysqli_stmt_close($stmt);
+    // Si no hay errores, verificar usuario en la base de datos
+    if (empty($username_err) && empty($password_err)) {
+        $sql = "SELECT idusuario, username, password_hash FROM usuarios WHERE username = :username";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(":username", $username, PDO::PARAM_STR);
+        $stmt->execute();
+
+        // Verificar si existe el usuario
+        if ($stmt->rowCount() == 1) {
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (password_verify($password, $user["password_hash"])) {
+                // Iniciar sesión
+                $_SESSION["loggedin"] = true;
+                $_SESSION["idusuario"] = $user["idusuario"];
+                $_SESSION["username"] = $user["username"];
+
+                // Redirigir al usuario a la página de bienvenida
+                header("location: welcome.php");
+                exit();
+            } else {
+                $password_err = "La contraseña es incorrecta.";
+            }
+        } else {
+            $username_err = "No se encontró una cuenta con ese usuario.";
         }
     }
-    
-    // Close connection
-    mysqli_close($link);
 }
 ?>
- 
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Iniciar Sesión</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" hreF="./assets/css/style.css">
-
-    <style>
-        body{ font: 14px sans-serif; }
-        .wrapper{ width: 360px; padding: 20px; }
-    </style>
+    <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
 
-    
-    <header class="header-container">
-            
-            <div class="header_one">
-                <a href="http://localhost/Proyecto_Encuestas/encuestas/index.php"> <img class="logo" src="./imagenes/logo4.webp" alt="logo"></a>    
-               
-                <h2 class="title_page">Encuestas Dinamicas</h2>
-            </div>    
-                
-    </header>
+<header class="header-container">
+    <div class="header_one">
+        <a href="index.php"><img class="logo" src="./imagenes/logo4.webp" alt="logo"></a>
+        <h2 class="title_page">Encuestas Dinámicas</h2>
+    </div>     
+</header>
 
-    <div class="wrapper">
-        <h2>Ingreso</h2>
-        <p>Por favor ingresa tu nombre de usuario y contraseña.</p>
+<div class="wrapper">
+    <h2>Iniciar Sesión</h2>
+    <p>Ingresa tus credenciales para acceder.</p>
+    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <div class="form-group">
+            <label>Usuario</label>
+            <input type="text" name="username" class="form-control <?php echo (!empty($username_err)) ? 'is-invalid' : ''; ?>" value="<?php echo htmlspecialchars($username); ?>">
+            <span class="invalid-feedback"><?php echo $username_err; ?></span>
+        </div>    
+        <div class="form-group">
+            <label>Contraseña</label>
+            <input type="password" name="password" class="form-control <?php echo (!empty($password_err)) ? 'is-invalid' : ''; ?>">
+            <span class="invalid-feedback"><?php echo $password_err; ?></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary" value="Iniciar Sesión">
+        </div>
+        <p>¿No tienes cuenta? <a href="register.php">Regístrate aquí</a>.</p>
+    </form>
+</div>    
 
-        <?php 
-        if(!empty($login_err)){
-            echo '<div class="alert alert-danger">' . $login_err . '</div>';
-        }        
-        ?>
-
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-            <div class="form-group">
-                <label>Nombre de usuario</label>
-                <input type="text" name="username" class="form-control <?php echo (!empty($username_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $username; ?>">
-                <span class="invalid-feedback"><?php echo $username_err; ?></span>
-            </div>    
-            <div class="form-group">
-                <label>Contraseña</label>
-                <input type="password" name="password" class="form-control <?php echo (!empty($password_err)) ? 'is-invalid' : ''; ?>">
-                <span class="invalid-feedback"><?php echo $password_err; ?></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" class="btn btn-primary" value="Ingresar">
-            </div>
-            <p>¿No te has registrado? <a href="register.php">Registrate ya!</a>.</p>
-        </form>
-    </div>
 </body>
 </html>

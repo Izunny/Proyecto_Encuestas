@@ -1,64 +1,48 @@
 <?php
-
-require_once "config.php";
- 
+require_once __DIR__ . '/config/database.php';
 
 $username = $password = $confirm_password = "";
 $username_err = $password_err = $confirm_password_err = "";
- 
 
-if($_SERVER["REQUEST_METHOD"] == "POST"){
- 
-    
-    if(empty(trim($_POST["username"]))){
-        $username_err = "Please enter a username.";
-    } elseif(!preg_match('/^[a-zA-Z0-9_]+$/', trim($_POST["username"]))){
-        $username_err = "Username can only contain letters, numbers, and underscores.";
-    } else{
-        
-        $sql = "SELECT idusuario FROM usuarios WHERE username = ?";
-        
-        if($stmt = mysqli_prepare($link, $sql)){
-            
-            mysqli_stmt_bind_param($stmt, "s", $param_username);
-                
-            $param_username = trim($_POST["username"]);
-            
-            if(mysqli_stmt_execute($stmt)){
-                
-                mysqli_stmt_store_result($stmt);
-                
-                if(mysqli_stmt_num_rows($stmt) == 1){
-                    $username_err = "This username is already taken.";
-                } else{
-                    $username = trim($_POST["username"]);
-                }
-            } else{
-                echo "Oops! Something went wrong. Please try again later.";
-            }
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Validar username
+    if (empty(trim($_POST["username"]))) {
+        $username_err = "Por favor, ingresa un nombre de usuario.";
+    } elseif (!preg_match('/^[a-zA-Z0-9_]+$/', trim($_POST["username"]))) {
+        $username_err = "El usuario solo puede contener letras, números y guiones bajos.";
+    } else {
+        $sql = "SELECT idusuario FROM usuarios WHERE username = :username";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(":username", $_POST["username"], PDO::PARAM_STR);
+        $stmt->execute();
 
-            mysqli_stmt_close($stmt);
+        if ($stmt->rowCount() > 0) {
+            $username_err = "Este usuario ya está registrado.";
+        } else {
+            $username = trim($_POST["username"]);
         }
     }
-    
-    if(empty(trim($_POST["password"]))){
-        $password_err = "Please enter a password.";     
-    } elseif(strlen(trim($_POST["password"])) < 6){
-        $password_err = "Password must have atleast 6 characters.";
-    } else{
+
+    // Validar contraseña
+    if (empty(trim($_POST["password"]))) {
+        $password_err = "Por favor, ingresa una contraseña.";
+    } elseif (strlen(trim($_POST["password"])) < 6) {
+        $password_err = "La contraseña debe tener al menos 6 caracteres.";
+    } else {
         $password = trim($_POST["password"]);
     }
-    
-    
-    if(empty(trim($_POST["confirm_password"]))){
-        $confirm_password_err = "Please confirm password.";     
-    } else{
+
+    // Validar confirmación de contraseña
+    if (empty(trim($_POST["confirm_password"]))) {
+        $confirm_password_err = "Por favor, confirma tu contraseña.";
+    } else {
         $confirm_password = trim($_POST["confirm_password"]);
-        if(empty($password_err) && ($password != $confirm_password)){
-            $confirm_password_err = "Password did not match.";
+        if (empty($password_err) && ($password !== $confirm_password)) {
+            $confirm_password_err = "Las contraseñas no coinciden.";
         }
     }
-    
+
+    // Obtener otros datos del formulario
     $nombre = trim($_POST["nombre"]);
     $apellido_paterno = trim($_POST["apellido_paterno"]);
     $apellido_materno = trim($_POST["apellido_materno"]);
@@ -66,116 +50,112 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $email = trim($_POST["email"]);
     $telefono = trim($_POST["telefono"]);
     $genero = trim($_POST["genero"]);
-  
-    if(empty($username_err) && empty($password_err) && empty($confirm_password_err)){
-        
-        
-        $sql = "INSERT INTO usuarios (username, password, nombre, apellido_paterno, apellido_materno, fecha_nacimiento, email, telefono, genero) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-         
-        if($stmt = mysqli_prepare($link, $sql)){
-            
-            mysqli_stmt_bind_param($stmt, "sssssisis", $param_username, $param_password, $nombre, $apellido_paterno, $apellido_materno, $fecha_nacimiento,
-                                    $email, $telefono, $genero);
-            
-            
-            $param_username = $username;
-            $param_password = password_hash($password, PASSWORD_DEFAULT); 
-       
-            if(mysqli_stmt_execute($stmt)){
-                
-                header("location: login.php");
-            } else{
-                echo "Oops! Something went wrong. Please try again later.";
-            }
 
-            
-            mysqli_stmt_close($stmt);
+    // Si no hay errores, insertar en la base de datos
+    if (empty($username_err) && empty($password_err) && empty($confirm_password_err)) {
+        $sql = "INSERT INTO usuarios (username, password_hash, nombre, apellido_paterno, apellido_materno, fecha_nacimiento, email, telefono, genero) 
+                VALUES (:username, :password, :nombre, :apellido_paterno, :apellido_materno, :fecha_nacimiento, :email, :telefono, :genero)";
+
+        $stmt = $pdo->prepare($sql);
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+        $stmt->bindParam(":username", $username, PDO::PARAM_STR);
+        $stmt->bindParam(":password", $hashed_password, PDO::PARAM_STR);
+        $stmt->bindParam(":nombre", $nombre, PDO::PARAM_STR);
+        $stmt->bindParam(":apellido_paterno", $apellido_paterno, PDO::PARAM_STR);
+        $stmt->bindParam(":apellido_materno", $apellido_materno, PDO::PARAM_STR);
+        $stmt->bindParam(":fecha_nacimiento", $fecha_nacimiento, PDO::PARAM_STR);
+        $stmt->bindParam(":email", $email, PDO::PARAM_STR);
+        $stmt->bindParam(":telefono", $telefono, PDO::PARAM_STR);
+        $stmt->bindParam(":genero", $genero, PDO::PARAM_STR);
+
+        if ($stmt->execute()) {
+            header("location: login.php");
+            exit();
+        } else {
+            echo "Algo salió mal. Intenta de nuevo.";
         }
     }
-    
-    mysqli_close($link);
 }
 ?>
- 
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Sign Up</title>
+    <title>Registro</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" hreF="./assets/css/style.css">
-
+    <link rel="stylesheet" href="./assets/css/style.css">
     <style>
-        body{ font: 14px sans-serif; }
-        .wrapper{ width: 360px; padding: 20px; }
+        body { font: 14px sans-serif; }
+        .wrapper { width: 360px; padding: 20px; margin: auto; }
     </style>
 </head>
 <body>
 
-    <header class="header-container">
-            
-            <div class="header_one">
-                <a href="/"> <img class="logo" src="./imagenes/logo4.webp" alt="logo"></a>    
-               
-                <h2 class="title_page">Encuestas Dinamicas</h2>
-            </div>     
-                
-    </header>
+<header class="header-container">
+    <div class="header_one">
+        <a href="index.php"> <img class="logo" src="./imagenes/logo4.webp" alt="logo"></a>    
+        <h2 class="title_page">Encuestas Dinámicas</h2>
+    </div>     
+</header>
 
-    <div class="wrapper">
-        <h2>Registro</h2>
-        <p>Por favor, ingresa tus datos.</p>
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-            <div class="form-group">
-                <label>Nombre de usuario</label>
-                <input type="text" name="username" class="form-control <?php echo (!empty($username_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $username; ?>">
-                <span class="invalid-feedback"><?php echo $username_err; ?></span>
-            </div>    
-            <div class="form-group">
-                <label>Contraseña</label>
-                <input type="password" name="password" class="form-control <?php echo (!empty($password_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $password; ?>">
-                <span class="invalid-feedback"><?php echo $password_err; ?></span>
-            </div>
-            <div class="form-group">
-                <label>Confirma tu contraseña</label>
-                <input type="password" name="confirm_password" class="form-control <?php echo (!empty($confirm_password_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $confirm_password; ?>">
-                <span class="invalid-feedback"><?php echo $confirm_password_err; ?></span>
-            </div>
-            <div class="form-group">
-                <label>Nombre</label>
-                <input type="text" name="nombre" class="form-control">
-            </div>    
-            <div class="form-group">
-                <label>Apellido paterno</label>
-                <input type="text" name="apellido_paterno" class="form-control">
-            </div>    
-            <div class="form-group">
-                <label>Apellido materno</label>
-                <input type="text" name="apellido_materno" class="form-control">
-            </div>    
-            <div class="form-group">
-                <label>Fecha nacimiento</label>
-                <input type="date" name="fecha_nacimiento" class="form-control">
-            </div>    
-            <div class="form-group">
-                <label>Correo electronico</label>
-                <input type="text" name="email" class="form-control">
-            </div>    
-            <div class="form-group">
-                <label>Telefono</label>
-                <input type="text" name="telefono" class="form-control">
-            </div>    
-            <div class="form-group">
-                <label>Genero</label>
-                <input type="text" name="genero" class="form-control">
-            </div>    
-            <div class="form-group">
-                <input type="submit" class="btn btn-primary" value="Terminar">
-                <input type="reset" class="btn btn-secondary ml-2" value="Reiniciar">
-            </div>
-
-            <p>¿Ya tienes una cuenta? <a href="login.php">Ingresa aqui</a>.</p>
-        </form>
-    </div>    
+<div class="wrapper">
+    <h2>Registro</h2>
+    <p>Por favor, ingresa tus datos.</p>
+    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <div class="form-group">
+            <label>Nombre de usuario</label>
+            <input type="text" name="username" class="form-control <?php echo (!empty($username_err)) ? 'is-invalid' : ''; ?>" value="<?php echo htmlspecialchars($username); ?>">
+            <span class="invalid-feedback"><?php echo $username_err; ?></span>
+        </div>    
+        <div class="form-group">
+            <label>Contraseña</label>
+            <input type="password" name="password" class="form-control <?php echo (!empty($password_err)) ? 'is-invalid' : ''; ?>">
+            <span class="invalid-feedback"><?php echo $password_err; ?></span>
+        </div>
+        <div class="form-group">
+            <label>Confirma tu contraseña</label>
+            <input type="password" name="confirm_password" class="form-control <?php echo (!empty($confirm_password_err)) ? 'is-invalid' : ''; ?>">
+            <span class="invalid-feedback"><?php echo $confirm_password_err; ?></span>
+        </div>
+        <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" name="nombre" class="form-control">
+        </div>    
+        <div class="form-group">
+            <label>Apellido paterno</label>
+            <input type="text" name="apellido_paterno" class="form-control">
+        </div>    
+        <div class="form-group">
+            <label>Apellido materno</label>
+            <input type="text" name="apellido_materno" class="form-control">
+        </div>    
+        <div class="form-group">
+            <label>Fecha nacimiento</label>
+            <input type="date" name="fecha_nacimiento" class="form-control">
+        </div>    
+        <div class="form-group">
+            <label>Correo electrónico</label>
+            <input type="email" name="email" class="form-control">
+        </div>    
+        <div class="form-group">
+            <label>Teléfono</label>
+            <input type="text" name="telefono" class="form-control">
+        </div>    
+        <div class="form-group">
+            <label>Género</label>
+            <select name="genero" class="form-control">
+                <option value="">Seleccione...</option>
+                <option value="Masculino">Masculino</option>
+                <option value="Femenino">Femenino</option>
+                <option value="Otro">Otro</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary" value="Registrarse">
+        </div>
+    </form>
+</div>    
 </body>
 </html>

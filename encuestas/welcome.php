@@ -41,12 +41,14 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
         <a href="logout.php" class="btn btn-danger ml-3">Termina tu sesión</a>
     </p>
 
-    <ul>
-        <li><a href="#">Inicio</a></li>
-        <li><a href="#">Ver Ecnuestas</a></li>
-        <li><a href="#">Ver Resultados </a></li>
-        <li><a href="router.php?url=encuestas/agregar">Crear Encuesta</a></li>
+    <nav>
+    <ul class="nav-menu">
+        <li><a href="router.php?url=dashboard">Inicio</a></li>
+        <li><a href="router.php?url=encuestas">Ver Encuestas</a></li>
+        <li><a href="#">Ver Resultados</a></li>
+        <li><a href="agregar.php">Crear Encuesta</a></li>
     </ul>
+</nav>
 
     <main class="servicios">
         <h2>Servicicos</h2>
