@@ -1,12 +1,13 @@
 <?php
 require 'config/database.php';
+session_start(); // Necesario para obtener el id del usuario
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $titulo = $_POST['titulo'];
     $descripcion = $_POST['descripcion'];
     $fecha = $_POST['fecha'];
     $estado = $_POST['estado'];
-  
+    $idusuario = $_SESSION['idusuario']; // ID del usuario que crea la encuesta
 
     // Preguntas como arrays
     $preguntas = $_POST['preguntas'] ?? [];
@@ -14,41 +15,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     try {
         $pdo->beginTransaction();
 
-        // Insertar la encuesta en la tabla de encuestas
-        $sql = "INSERT INTO encuestas (titulo, descripcion, fecha, estado, obra_id, departamento_id) 
-                VALUES (:titulo, :descripcion, STR_TO_DATE(:fecha, '%d/%m/%Y'), :estado, :obra_id, :departamento_id)";
+        // Insertar la encuesta en la tabla correcta: enc_encuestasm
+        $sql = "INSERT INTO enc_encuestasm (nombre, descripcion, fecha, activo, idusuario) 
+                VALUES (:titulo, :descripcion, STR_TO_DATE(:fecha, '%d/%m/%Y'), :estado, :idusuario)";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
             'titulo' => $titulo,
             'descripcion' => $descripcion,
             'fecha' => $fecha,
             'estado' => $estado,
-            
+            'idusuario' => $idusuario
         ]);
         $encuesta_id = $pdo->lastInsertId();
 
-        // Insertar las preguntas
-        foreach ($preguntas as $index => $pregunta) {
-            $sql_pregunta = "INSERT INTO preguntas (encuesta_id, pregunta, tipo, requerida) 
-                             VALUES (:encuesta_id, :pregunta, :tipo, :requerida)";
+        // Insertar las preguntas en la tabla correcta: enc_pregunta
+        foreach ($preguntas as $pregunta) {
+            $sql_pregunta = "INSERT INTO enc_pregunta (idencuesta, textopregunta, idtipopregunta, requerida) 
+                             VALUES (:idencuesta, :textopregunta, :idtipopregunta, :requerida)";
             $stmt_pregunta = $pdo->prepare($sql_pregunta);
             $stmt_pregunta->execute([
-                'encuesta_id' => $encuesta_id,
-                'pregunta' => $pregunta['titulo'],
-                'tipo' => $pregunta['tipo'],
-                'requerida' => $pregunta['requerida']
+                'idencuesta' => $encuesta_id,
+                'textopregunta' => $pregunta['titulo'],
+                'idtipopregunta' => $pregunta['tipo'],
+                'requerida' => isset($pregunta['requerida']) ? 1 : 0
             ]);
 
             $pregunta_id = $pdo->lastInsertId();
 
-            // Insertar opciones si el tipo de pregunta lo requiere
-            if (in_array($pregunta['tipo'], ['opcion_unica', 'opcion_multiple'])) {
+            // Insertar opciones si el tipo de pregunta lo requiere en la tabla correcta: enc_opcion
+            if (in_array($pregunta['tipo'], ['3', '4']) && !empty($pregunta['opciones'])) { // 3 = opción única, 4 = opción múltiple
                 foreach ($pregunta['opciones'] as $opcion) {
-                    $sql_opcion = "INSERT INTO opciones (pregunta_id, texto) VALUES (:pregunta_id, :texto)";
+                    $sql_opcion = "INSERT INTO enc_opcion (idpregunta, opcion) VALUES (:idpregunta, :opcion)";
                     $stmt_opcion = $pdo->prepare($sql_opcion);
                     $stmt_opcion->execute([
-                        'pregunta_id' => $pregunta_id,
-                        'texto' => $opcion
+                        'idpregunta' => $pregunta_id,
+                        'opcion' => $opcion
                     ]);
                 }
             }
@@ -56,15 +57,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Confirmar la transacción
         $pdo->commit();
-        echo "<p>Encuesta agregada correctamente.</p>";
+        echo json_encode(["status" => "success", "message" => "Encuesta agregada correctamente."]);
 
     } catch (Exception $e) {
         // En caso de error, hacer rollback
         $pdo->rollBack();
-        echo "<p>Error al agregar la encuesta: " . $e->getMessage() . "</p>";
+        echo json_encode(["status" => "error", "message" => "Error al agregar la encuesta: " . $e->getMessage()]);
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">
@@ -88,7 +90,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <h2 class="card-title">Agregar Encuesta</h2>
         </header>
         <div class="card-body">
-            <form action="router.php?url=encuestas/agregar" method="POST">
+             <form action="guardar_encuesta.php" method="POST">
+
             
                 <div class="row">
                     <div class="form-group col-12 col-md-3">
