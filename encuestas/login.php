@@ -68,7 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <div class="wrapper">
     <h2>Iniciar Sesión</h2>
-    <p>Ingresa tus credenciales para acceder.</p>
+  
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
         <div class="form-group">
             <label>Usuario</label>

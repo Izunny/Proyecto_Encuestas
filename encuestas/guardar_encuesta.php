@@ -1,11 +1,11 @@
 <?php
 require_once __DIR__ . '/config/database.php';
-session_start(); // asegura que la sesión está activa para identificar al usuario
+session_start(); // asegura que la sesion está activa para identificar al usuario
 
-// antes de hacer cualquier cosa, verificamos que el usuario esté autenticado
+// antes de hacer cualquier cosa, verificamos que el usuario este autenticado
 if (!isset($_SESSION['idusuario'])) {
     echo json_encode(["status" => "error", "message" => "Error: Usuario no autenticado"]);
-    exit(); // si no hay sesión, se corta la ejecución aquí mismo
+    exit(); // si no hay sesión, se corta la ejecución aqui mismo
 }
 
 // para depuración: Si algo falla con la sesión, puedes descomentar esta línea

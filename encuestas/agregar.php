@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body>
     <!-- Encabezado -->
-    <?php include dirname(__DIR__) . "/templates/header.php"; ?>
+    <?php include __DIR__ . "/includes/header.php"; ?>
 
 
     
@@ -94,23 +94,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             
                 <div class="row">
-                    <div class="form-group col-12 col-md-3">
+                    <div class="form-group col-12 col-md-2">
                         <label>Título:</label>
                         <input type="text" name="titulo" class="form-control" required>
                     </div>
                     <div class="form-group col-12 col-md-3">
                         <label>Descripción:</label>
-                        <textarea name="descripcion" class="form-control" required></textarea>
+                        <textarea stai name="descripcion" class="form-control" required></textarea>
                     </div>
-                    <div class="form-group col-12 col-md-2">
-                        <label>Estado:</label>
-                        <select class="form-control" name="estado">
+                    <div class="form-group col-10 col-md-1">
+                        <label>Estado:</label><br>
+                        <select class="form-control1" name="estado">
                             <option value="S">Activo</option>
                             <option value="N">Inactivo</option>
                         </select>
                     </div>
-                    <div class="form-group col-12 col-md-2">
-                        <label>Fecha:</label>
+                    <div class="form-group col-10 col-md-1">
+                        <label>Fecha:</label><br>
                         <div class="input-group">
                             <span class="input-group-addon">
                             </span>
@@ -229,6 +229,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             element.parentElement.remove();
         }
     </script>
+
+
 </body>
 </html>
 

@@ -188,6 +188,15 @@ a:hover{
     border-radius: 4px;
 }
 
+
+.form-control1 {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    
+}
+
 /* Ajustes para los campos en una fila */
 .row {
     display: flex;
@@ -254,4 +263,16 @@ a:hover{
 
 .nav-menu a:hover {
     color: #00c8ff; /* Color al pasar el mouse */
+}
+
+
+
+textarea {
+    max-height: 15px; /* Para evitar que crezca demasiado */
+   
+}
+
+input-group{
+    max-height: 15px; /* Para evitar que crezca demasiado */
+    
 }

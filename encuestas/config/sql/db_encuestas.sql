@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 23-02-2025 a las 00:52:16
+-- Tiempo de generación: 13-03-2025 a las 05:26:06
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -36,6 +36,13 @@ CREATE TABLE `enc_encuestasm` (
   `activo` varchar(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `enc_encuestasm`
+--
+
+INSERT INTO `enc_encuestasm` (`idencuesta`, `nombre`, `descripcion`, `idusuario`, `fecha`, `activo`) VALUES
+(2, 'prueba', 'des', 1, '2025-03-12', 'S');
+
 -- --------------------------------------------------------
 
 --
@@ -47,6 +54,16 @@ CREATE TABLE `enc_opcion` (
   `idpregunta` int(11) NOT NULL,
   `opcion` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `enc_opcion`
+--
+
+INSERT INTO `enc_opcion` (`idopciones`, `idpregunta`, `opcion`) VALUES
+(1, 3, '1'),
+(2, 3, '2'),
+(3, 4, 'a'),
+(4, 4, 'b');
 
 -- --------------------------------------------------------
 
@@ -60,8 +77,17 @@ CREATE TABLE `enc_pregunta` (
   `textopregunta` varchar(255) NOT NULL,
   `requerida` varchar(1) NOT NULL,
   `idtipopregunta` int(11) NOT NULL
-  
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `enc_pregunta`
+--
+
+INSERT INTO `enc_pregunta` (`idpregunta`, `idencuesta`, `textopregunta`, `requerida`, `idtipopregunta`) VALUES
+(1, 2, 'pregunta 1', '1', 1),
+(2, 2, 'pregunta 2', '0', 2),
+(3, 2, 'pregunta 3', '0', 3),
+(4, 2, 'pregunta 4', '0', 4);
 
 -- --------------------------------------------------------
 
@@ -131,6 +157,7 @@ INSERT INTO `enc_tipopreguntacatalogo` (`idtipopregunta`, `tipopregunta`) VALUES
 
 CREATE TABLE `usuarios` (
   `idusuario` int(11) NOT NULL,
+  `username` varchar(50) NOT NULL,
   `nombre` varchar(100) NOT NULL,
   `apellido_paterno` varchar(100) NOT NULL,
   `apellido_materno` varchar(100) DEFAULT NULL,
@@ -140,6 +167,13 @@ CREATE TABLE `usuarios` (
   `genero` enum('Masculino','Femenino','Otro') NOT NULL,
   `password_hash` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `usuarios`
+--
+
+INSERT INTO `usuarios` (`idusuario`, `username`, `nombre`, `apellido_paterno`, `apellido_materno`, `fecha_nacimiento`, `email`, `telefono`, `genero`, `password_hash`) VALUES
+(1, 'dan', 'danny', 'Durazo', 'Arvizu', '1991-09-08', 'danny@gmail.com', '6684635851', 'Femenino', '$2y$10$wwMEWJbpAWo0bsulCjszmuj.KlqNEQujuYTqojXKqkFax8Nz0Zi5S');
 
 --
 -- Índices para tablas volcadas
@@ -203,7 +237,8 @@ ALTER TABLE `enc_tipopreguntacatalogo`
 --
 ALTER TABLE `usuarios`
   ADD PRIMARY KEY (`idusuario`),
-  ADD UNIQUE KEY `email` (`email`);
+  ADD UNIQUE KEY `email` (`email`),
+  ADD UNIQUE KEY `username` (`username`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -213,19 +248,19 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `enc_encuestasm`
 --
 ALTER TABLE `enc_encuestasm`
-  MODIFY `idencuesta` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idencuesta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `enc_opcion`
 --
 ALTER TABLE `enc_opcion`
-  MODIFY `idopciones` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idopciones` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `enc_pregunta`
 --
 ALTER TABLE `enc_pregunta`
-  MODIFY `idpregunta` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idpregunta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `enc_respuesta`
@@ -255,7 +290,7 @@ ALTER TABLE `enc_tipopreguntacatalogo`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `idusuario` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idusuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Restricciones para tablas volcadas
