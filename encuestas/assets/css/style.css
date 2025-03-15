@@ -2,7 +2,7 @@
 
 * {
     font-family: 'Montserrat';
-    color:grey;
+    color:rgb(194, 194, 194);
 }
 
 html, body {
@@ -94,7 +94,7 @@ a:hover{
 }
 
 .index_button_one {
-    color: gray;
+    color: rgb(225, 225, 225);
     font-weight: bold;
     font-size: 16px;
     background-color: transparent;
@@ -109,7 +109,7 @@ a:hover{
 }
 
 .index_button_two {
-    color: gray;
+    color: rgb(225, 225, 225);
     font-weight: bold;
     font-size: 16px;
     background-color: #51369A;
@@ -224,11 +224,11 @@ a:hover{
 
 /* Estilos para las preguntas dinámicas */
 #panelPreguntasContainer {
-    margin-top: 2rem;
+    margin-top: 20px;
     background-color: rgba(88, 88, 88, 0.2);
-    border-radius: 10px;
-    padding: 0.5rem;
-    margin: 1rem;
+    border-radius: 20px;
+    padding: 30px;
+    margin: 30px;
     
 }
 
@@ -275,4 +275,17 @@ textarea {
 input-group{
     max-height: 15px; /* Para evitar que crezca demasiado */
     
+}
+
+button {
+    color: rgb(233, 233, 233);
+    font-weight: bold;
+    font-size:12px;
+    background-color: #51369A;
+    border-radius: 5px;
+    border: none;
+    padding: 0.5rem 1rem;
+    min-width: 120px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
 }

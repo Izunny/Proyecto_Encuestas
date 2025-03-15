@@ -124,12 +124,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div id="panelPreguntasContainer"></div>
                 </div>
                 
-                <button type="button" class="btn btn-success mt-3" onclick="agregarPreguntaPanel()">Agregar Pregunta <i class="fa fa-plus"></i></button>
                 
                 <div class="row">
                     <div class="col-12">
+                        <button type="button" class="btn btn-success mt-3" onclick="agregarPreguntaPanel()">Agregar Pregunta <i class="fa fa-plus"></i></button>
                         <button type="submit" class="btn btn-primary">Guardar Encuesta <i class="fa fa-save"></i></button>
-                        <button type="button" class="btn btn-default" onclick="Cancelar(this)">Cancelar <i class="fa fa-ban"></i></button>
+                        <button type="button" class="btn btn-default" onclick="window.location.href='welcome.php'">
+                            Cancelar <i class="fa fa-ban"></i>
+                        </button>
+
                     </div>
                 </div>
             </form>

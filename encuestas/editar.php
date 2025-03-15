@@ -32,13 +32,35 @@ if ($encuesta_id) {
     $preguntas = $stmt_preguntas->fetchAll(PDO::FETCH_ASSOC);
 
     // Obtener las opciones de cada pregunta
-    foreach ($preguntas as &$pregunta) {
-        $sql_opciones = "SELECT * FROM enc_opcion WHERE idpregunta = :idpregunta";
-        $stmt_opciones = $pdo->prepare($sql_opciones);
-        $stmt_opciones->execute(['idpregunta' => $pregunta['idpregunta']]);
-        $pregunta['opciones'] = $stmt_opciones->fetchAll(PDO::FETCH_ASSOC);
+    $nuevas_preguntas = [];
+
+foreach ($preguntas as $pregunta) {
+    if (!isset($pregunta['idpregunta'])) continue;
+
+    $sql_opciones = "SELECT * FROM enc_opcion WHERE idpregunta = :idpregunta";
+    $stmt_opciones = $pdo->prepare($sql_opciones);
+    $stmt_opciones->execute(['idpregunta' => $pregunta['idpregunta']]);
+    
+    $opciones = $stmt_opciones->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Solo agregar opciones si es opción única (3) o múltiple (4)
+    if (in_array($pregunta['idtipopregunta'], ['3', '4'])) {
+        $pregunta['opciones'] = $opciones ?: [];
+    } else {
+        $pregunta['opciones'] = [];
     }
+
+    $nuevas_preguntas[] = $pregunta; // Guardar en nuevo array
 }
+
+$preguntas = $nuevas_preguntas; // Reemplazar el array original con el corregido
+
+
+    
+}
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -129,12 +151,14 @@ if ($encuesta_id) {
                         </div>
                     </div>
                     
-                    <button type="button" class="btn btn-success mt-3" onclick="agregarPreguntaPanel()">Agregar Pregunta <i class="fa fa-plus"></i></button>
                     
                     <div class="row">
                         <div class="col-12">
+                            <button type="button" class="btn btn-success mt-3" onclick="agregarPreguntaPanel()">Agregar Pregunta <i class="fa fa-plus"></i></button>
                             <button type="submit" class="btn btn-primary">Guardar Encuesta <i class="fa fa-save"></i></button>
-                            <button type="button" class="btn btn-default" onclick="Cancelar(this)">Cancelar <i class="fa fa-ban"></i></button>
+                            <button type="button" class="btn btn-default" onclick="window.location.href='welcome.php'">
+                                Cancelar <i class="fa fa-ban"></i>
+                            </button>
                         </div>
                     </div>
                 </form>
