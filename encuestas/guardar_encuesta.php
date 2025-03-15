@@ -52,11 +52,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->execute([$encuesta_id]);
         }
 
+        // Mapeo de tipos de pregunta de texto a número
+        $tipos_pregunta = [
+            "texto" => 1,
+            "texto_abierto" => 2,
+            "opcion_unica" => 3,
+            "opcion_multiple" => 4
+        ];
+
         foreach ($preguntas as $pregunta) {
-            $id_tipo_pregunta = in_array($pregunta['tipo'], [1, 2, 3, 4]) ? (int) $pregunta['tipo'] : null;
+            $tipo_pregunta = $pregunta['tipo'] ?? null;
+
+            // Convertimos el tipo de pregunta de texto a número si es necesario
+            if (isset($tipos_pregunta[$tipo_pregunta])) {
+                $id_tipo_pregunta = $tipos_pregunta[$tipo_pregunta];
+            } else {
+                $id_tipo_pregunta = in_array($tipo_pregunta, [1, 2, 3, 4]) ? (int) $tipo_pregunta : null;
+            }
 
             if ($id_tipo_pregunta === null) {
-                throw new Exception("Error: Tipo de pregunta inválido o no definido.");
+                throw new Exception("Error: Tipo de pregunta inválido o no definido. Tipo recibido: " . $tipo_pregunta);
             }
 
             $sql_pregunta = "INSERT INTO enc_pregunta (idencuesta, textopregunta, idtipopregunta, requerida) 
@@ -83,7 +98,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         $pdo->commit();
-        echo json_encode(["status" => "success", "message" => "Encuesta actualizada correctamente."]);
+        echo json_encode(["status" => "success", "message" => "Encuesta guardada correctamente."]);
         exit();
 
     } catch (Exception $e) {
