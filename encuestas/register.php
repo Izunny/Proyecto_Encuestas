@@ -100,50 +100,53 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>     
 </header>
 
-<div class="wrapper">
+<div class="wrapper-register">
+    
+    <div class="flex-wrapper">
     <h2>Registro</h2>
-    <p>Por favor, ingresa tus datos.</p>
+    <p>Por favor, ingresa tus datos.</p>    
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-        <div class="form-group">
+        <div class="register-fields">
+        <div class="form-group grid1">
             <label>Nombre de usuario</label>
             <input type="text" name="username" class="form-control <?php echo (!empty($username_err)) ? 'is-invalid' : ''; ?>" value="<?php echo htmlspecialchars($username); ?>">
             <span class="invalid-feedback"><?php echo $username_err; ?></span>
         </div>    
-        <div class="form-group">
+        <div class="form-group grid2">
             <label>Contraseña</label>
             <input type="password" name="password" class="form-control <?php echo (!empty($password_err)) ? 'is-invalid' : ''; ?>">
             <span class="invalid-feedback"><?php echo $password_err; ?></span>
         </div>
-        <div class="form-group">
+        <div class="form-group grid3">
             <label>Confirma tu contraseña</label>
             <input type="password" name="confirm_password" class="form-control <?php echo (!empty($confirm_password_err)) ? 'is-invalid' : ''; ?>">
             <span class="invalid-feedback"><?php echo $confirm_password_err; ?></span>
         </div>
-        <div class="form-group">
+        <div class="form-group grid4">
             <label>Nombre</label>
             <input type="text" name="nombre" class="form-control">
         </div>    
-        <div class="form-group">
+        <div class="form-group grid5">
             <label>Apellido paterno</label>
             <input type="text" name="apellido_paterno" class="form-control">
         </div>    
-        <div class="form-group">
+        <div class="form-group grid6">
             <label>Apellido materno</label>
             <input type="text" name="apellido_materno" class="form-control">
         </div>    
-        <div class="form-group">
+        <div class="form-group grid7">
             <label>Fecha nacimiento</label>
             <input type="date" name="fecha_nacimiento" class="form-control">
         </div>    
-        <div class="form-group">
+        <div class="form-group grid8">
             <label>Correo electrónico</label>
             <input type="email" name="email" class="form-control">
         </div>    
-        <div class="form-group">
+        <div class="form-group grid9">
             <label>Teléfono</label>
             <input type="text" name="telefono" class="form-control">
         </div>    
-        <div class="form-group">
+        <div class="form-group grid10">
             <label>Género</label>
             <select name="genero" class="form-control">
                 <option value="">Seleccione...</option>
@@ -152,10 +155,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <option value="Otro">Otro</option>
             </select>
         </div>
+        </div>
         <div class="form-group">
             <input type="submit" class="btn btn-primary" value="Registrarse">
         </div>
     </form>
+    </div>
+
+    <div class="flex-wrapper">
+        <img class="register-img" src="imagenes/register.jpg" alt="">
+    </div>
+
 </div>    
 </body>
 </html>

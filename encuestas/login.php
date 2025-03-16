@@ -67,24 +67,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </header>
 
 <div class="wrapper">
-    <h2>Iniciar Sesión</h2>
-  
-    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-        <div class="form-group">
-            <label>Usuario</label>
-            <input type="text" name="username" class="form-control <?php echo (!empty($username_err)) ? 'is-invalid' : ''; ?>" value="<?php echo htmlspecialchars($username); ?>">
-            <span class="invalid-feedback"><?php echo $username_err; ?></span>
-        </div>    
-        <div class="form-group">
-            <label>Contraseña</label>
-            <input type="password" name="password" class="form-control <?php echo (!empty($password_err)) ? 'is-invalid' : ''; ?>">
-            <span class="invalid-feedback"><?php echo $password_err; ?></span>
-        </div>
-        <div class="form-group">
-            <input type="submit" class="btn btn-primary" value="Iniciar Sesión">
-        </div>
-        <p>¿No tienes cuenta? <a href="register.php">Regístrate aquí</a>.</p>
-    </form>
+    
+    <div class="flex-wrapper login-items">
+        <h2>Iniciar Sesión</h2>
+    
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+            <div class="form-group">
+                <label>Usuario</label>
+                <input type="text" name="username" class="form-control <?php echo (!empty($username_err)) ? 'is-invalid' : ''; ?>" value="<?php echo htmlspecialchars($username); ?>">
+                <span class="invalid-feedback"><?php echo $username_err; ?></span>
+            </div>    
+            <div class="form-group">
+                <label>Contraseña</label>
+                <input type="password" name="password" class="form-control <?php echo (!empty($password_err)) ? 'is-invalid' : ''; ?>">
+                <span class="invalid-feedback"><?php echo $password_err; ?></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" value="Iniciar Sesión">
+            </div>
+            <p>¿No tienes cuenta? <a href="register.php">Regístrate aquí</a>.</p>
+        </form>
+    </div>
+
+    <div class="flex-wrapper">
+        <img class="home-img" src="imagenes/junta.jpg" alt="">
+    </div>
 </div>    
 
 </body>
