@@ -29,20 +29,28 @@
     </header>
 
     <div class="container-one">
-            <h3>Encuestas personalizadas al instante</h3>
+            <h1>Crea encuestas personalizadas al <br>instante y muestralas al mundo</h1>
             <p class="text">
+                Tus preguntas, tus reglas. En Encuestas Dinamicas,
+                crear encuestas nunca fue tan fácil y dinámico.
+                Diseña cuestionarios a tu medida, compártelos en 
+                segundos y obtén respuestas en tiempo real.
+                Ideal para todo: desde estudios serios hasta diversión con 
+                amigos. ¡Convierte tus dudas en datos!
+            </p>
+
+            <img class="home-img" src="imagenes/encuesta.jpg" alt="">
+         
+    </div>
+
+<!--             <p class="text">
                 Tus preguntas, tus reglas. En Encuestas Dinamicas,
                 crear encuestas nunca fue tan fácil y dinámico.<br>
                 Diseña cuestionarios a tu medida, compártelos en 
                 segundos y obtén respuestas en tiempo real.<br>
                 Ideal para todo: desde estudios serios hasta diversión con 
                 amigos. ¡Convierte tus dudas en datos!
-            </p>
-
-            <img class="home-img" src="imagenes/enc.webp" alt="">
-         
-    </div>
-
+            </p>-->
 
 
 </body>

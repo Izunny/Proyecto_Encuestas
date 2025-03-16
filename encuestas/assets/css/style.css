@@ -2,7 +2,7 @@
 
 * {
     font-family: 'Montserrat';
-    color:rgb(194, 194, 194);
+    color: white;
 }
 
 html, body {
@@ -10,9 +10,8 @@ html, body {
     min-height: 100vh;
     margin: 0;
     padding: 0;
-    background: linear-gradient(to bottom, #080B18 0%, #211E3B 100%);
-    background-size: cover;
-    background-attachment: fixed; 
+    background-color: #003153;
+    background-image: linear-gradient(315deg, #003153 0%, #1B1B1B 74%);
     width: 100%;
     overflow-x: hidden; 
 }
@@ -45,13 +44,8 @@ div {
     align-items: center;
     display: flex;
     flex-direction: row;
-    margin: 15px 100px;
-    background-color: rgba(23, 23, 23, 0.2);
+    margin: 15px 200px;
     justify-content: space-between;
-    border-radius: 10px;
-    border-color: gray;
-    border-style: solid;
-    border-width: 1.5px;
 }
 
 .header_one {
@@ -136,23 +130,17 @@ a:hover{
     margin: 40px;
 }
 
-.home-img{
-    width: 20%;
+.container-one h1{
+    color: #a89bff
 }
 
-.header-container {
-    font-weight: bold;
-    font-size: 18px;
-    align-items: center;
-    display: flex;
-    flex-direction: row;
-    margin: 15px 100px;
-    background-color: rgba(23, 23, 23, 0.2);
-    justify-content: space-between;
-    border-radius: 10px;
-    border-color: gray;
-    border-style: solid;
-    border-width: 1.5px;
+.home-img{
+    width: 800px;
+    border: 1px solid rgb(75, 75, 75);
+    /* adds 12px border radius */
+    border-radius: 12px;
+    padding: 8px;
+    background-color: rgb(3, 24, 33);
 }
 
 .container-one{
@@ -160,6 +148,11 @@ a:hover{
     flex-direction: column;
     font-size: 20px;
     align-content: center;
+    text-align: center;
+}
+
+p.text {
+    width: 700px;
 }
 
 /*diseño responsivo*/
