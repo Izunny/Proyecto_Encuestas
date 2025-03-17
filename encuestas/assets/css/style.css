@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
 * {
-    font-family: 'Montserrat';
+    font-family: 'Arial';
     color: white;
 }
 
@@ -80,7 +80,7 @@ a {
 }
 
 input{
-    color: rgb(71, 71, 71);
+    color: rgb(39, 39, 39);
 }
 
 a:hover{
@@ -371,12 +371,13 @@ th, td{
 
 
 textarea {
-    max-height: 15px; /* Para evitar que crezca demasiado */
+    max-height: 15px; 
+    color: rgb(39, 39, 39);
    
 }
 
 input-group{
-    max-height: 15px; /* Para evitar que crezca demasiado */
+    max-height: 15px; 
     
 }
 
@@ -391,4 +392,13 @@ button {
     min-width: 120px;
     cursor: pointer;
     transition: all 0.3s ease 0s;
+}
+
+select {
+    max-height: 34px; 
+    color: rgb(39, 39, 39);
+}
+
+option {
+    color: rgb(39, 39, 39);
 }
