@@ -158,7 +158,7 @@ INSERT INTO `enc_tipopreguntacatalogo` (`idtipopregunta`, `tipopregunta`) VALUES
 CREATE TABLE `usuarios` (
   `idusuario` int(11) NOT NULL,
   `username` varchar(50) NOT NULL,
-  `nombre` varchar(100) NOT NULL,
+  `nombreU` varchar(100) NOT NULL,
   `apellido_paterno` varchar(100) NOT NULL,
   `apellido_materno` varchar(100) DEFAULT NULL,
   `fecha_nacimiento` date NOT NULL,

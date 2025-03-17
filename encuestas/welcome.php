@@ -79,8 +79,8 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     </div>
     <nav>
         <ul class="nav-menu">
-            <li><a href="#">Responder</a></li>
             <li><a href="#">Ver Resultados</a></li>
+            <li><a href="responder.php">Responder</a></li>
             <li><a href="editar.php">Editar Encuesta</a></li>
             <li><a href="agregar.php">Crear Encuesta</a></li>
         </ul>
