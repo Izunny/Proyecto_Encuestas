@@ -9,7 +9,49 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     exit;
 }
 ?>
- 
+
+    <!-- Se muestra los datos principales de todas las encuestas -->
+    <p>
+    <?php 
+        $username = "root"; 
+        $password = ""; 
+        $database = "db_encuestas"; 
+        $mysqli = new mysqli("localhost", $username, $password, $database); 
+        $query = "SELECT * FROM enc_encuestasm INNER JOIN usuarios ON enc_encuestasm.idusuario=usuarios.idusuario ORDER BY idencuesta ASC";
+
+
+        $tabla_enc = '<table class="table-welcome"> 
+            <tr> 
+                <td> <font face="Arial">ID Encuesta</font> </td> 
+                <td> <font face="Arial">Nombre de<br>encuesta</font> </td> 
+                <td> <font face="Arial">Descripcion</font> </td> 
+                <td> <font face="Arial">Autor</font> </td> 
+                <td> <font face="Arial">Fecha</font> </td> 
+            </tr>';
+
+        if ($result = $mysqli->query($query)) {
+            while ($row = $result->fetch_assoc()) {
+                
+                $field1name = $row["idencuesta"];
+                $field2name = $row["nombre"];
+                $field3name = $row["descripcion"];
+                $field4name = $row["nombreU"];
+                $field5name = $row["fecha"]; 
+
+                $tabla_enc .= '<tr> 
+                        <td>'.$field1name.'</td> 
+                        <td>'.$field2name.'</td> 
+                        <td>'.$field3name.'</td> 
+                        <td>'.$field4name.'</td> 
+                        <td>'.$field5name.'</td> 
+                    </tr>';
+            }
+            $tabla_enc .= '</table>';
+            $result->free();
+        } 
+    ?>
+    </p>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,24 +65,26 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 </head>
 <body>
 
-        
-<?php include __DIR__ . "/includes/header.php"; ?>
+       
+    <?php include __DIR__ . "/includes/header.php"; ?>
+    <div class="items-welcome">
+        <div class="wrap-welcome">
+            <h1>Hola, <b><?php echo htmlspecialchars($_SESSION["username"]); ?></b>.</h1>
+        </div>
 
-    <h1 class="my-5">Hola, <b><?php echo htmlspecialchars($_SESSION["username"]); ?></b>.</h1>
-    <p>
-        <!-- Todavia no se agrega una función para cambiar la contraseña-->
-        <a href="reset-password.php" class="btn btn-warning">Cambiar tu contraseña</a>
-      
-    </p>
-
+        <div class="wrap-welcome">
+            <h2>Encuestas activas</h2>
+            <p> <?php echo $tabla_enc; ?> </p>
+        </div>
+    </div>
     <nav>
-    <ul class="nav-menu">
-        <li><a href="#">Ver Encuestas</a></li>
-        <li><a href="#">Ver Resultados</a></li>
-        <li><a href="editar.php">Editar Encuesta</a></li>
-        <li><a href="agregar.php">Crear Encuesta</a></li>
-    </ul>
-</nav>
+        <ul class="nav-menu">
+            <li><a href="#">Ver Encuestas</a></li>
+            <li><a href="#">Ver Resultados</a></li>
+            <li><a href="editar.php">Editar Encuesta</a></li>
+            <li><a href="agregar.php">Crear Encuesta</a></li>
+        </ul>
+    </nav>
 
 </body>
 </html>
