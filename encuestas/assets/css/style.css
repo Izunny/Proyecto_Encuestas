@@ -154,6 +154,10 @@ p.text {
     width: 700px;
 }
 
+.cerrar_sesion {
+    background-color: rgb(150, 54, 54) !important;
+}
+
 /* Login */
 .wrapper {
     display: flex;
@@ -263,6 +267,33 @@ th, td{
     text-align: left;
 }
 
+.dashboard_button {
+    color: rgb(225, 225, 225);
+    font-weight: bold;
+    font-size: 12px;
+    background-color: #51369A;
+    border-radius: 5px;
+    border: none;
+    padding: 0.5rem 0.5rem;
+    min-width: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+}
+
+.dashboard_button:hover {
+    background-color: rgba(81, 54, 154, 0.8)    ;
+
+}
+
+.dashboard_button:hover {
+    background-color: rgba(0,136,169,0.8);
+}
+
+.no_borders{
+    border-color: transparent;
+    border-bottom-style: hidden;
+    border-right-style: hidden;
+}
 
 /*diseño responsivo*/
 

@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Obtener otros datos del formulario
-    $nombre = trim($_POST["nombre"]);
+    $nombreU = trim($_POST["nombreU"]);
     $apellido_paterno = trim($_POST["apellido_paterno"]);
     $apellido_materno = trim($_POST["apellido_materno"]);
     $fecha_nacimiento = trim($_POST["fecha_nacimiento"]);
@@ -53,15 +53,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Si no hay errores, insertar en la base de datos
     if (empty($username_err) && empty($password_err) && empty($confirm_password_err)) {
-        $sql = "INSERT INTO usuarios (username, password_hash, nombre, apellido_paterno, apellido_materno, fecha_nacimiento, email, telefono, genero) 
-                VALUES (:username, :password, :nombre, :apellido_paterno, :apellido_materno, :fecha_nacimiento, :email, :telefono, :genero)";
+        $sql = "INSERT INTO usuarios (username, password_hash, nombreU, apellido_paterno, apellido_materno, fecha_nacimiento, email, telefono, genero) 
+                VALUES (:username, :password, :nombreU, :apellido_paterno, :apellido_materno, :fecha_nacimiento, :email, :telefono, :genero)";
 
         $stmt = $pdo->prepare($sql);
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
         $stmt->bindParam(":username", $username, PDO::PARAM_STR);
         $stmt->bindParam(":password", $hashed_password, PDO::PARAM_STR);
-        $stmt->bindParam(":nombre", $nombre, PDO::PARAM_STR);
+        $stmt->bindParam(":nombreU", $nombreU, PDO::PARAM_STR);
         $stmt->bindParam(":apellido_paterno", $apellido_paterno, PDO::PARAM_STR);
         $stmt->bindParam(":apellido_materno", $apellido_materno, PDO::PARAM_STR);
         $stmt->bindParam(":fecha_nacimiento", $fecha_nacimiento, PDO::PARAM_STR);
@@ -124,7 +124,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
         <div class="form-group grid4">
             <label>Nombre</label>
-            <input type="text" name="nombre" class="form-control">
+            <input type="text" name="nombreU" class="form-control">
         </div>    
         <div class="form-group grid5">
             <label>Apellido paterno</label>

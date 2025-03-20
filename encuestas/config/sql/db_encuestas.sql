@@ -40,7 +40,7 @@ CREATE TABLE `enc_encuestasm` (
 -- Volcado de datos para la tabla `enc_encuestasm`
 --
 
-INSERT INTO `enc_encuestasm` (`idencuesta`, `nombre`, `descripcion`, `idusuario`, `fecha`, `activo`) VALUES
+INSERT INTO `enc_encuestasm` (`idencuesta`, `nombreU`, `descripcion`, `idusuario`, `fecha`, `activo`) VALUES
 (2, 'prueba', 'des', 1, '2025-03-12', 'S');
 
 -- --------------------------------------------------------

@@ -21,7 +21,8 @@
         <div class="header_two">
 
             <?php if (isset($_SESSION['idusuario'])): ?>
-                <a href="/encuestas/logout.php"><button class="index_button_two">Cerrar sesión</button></a>
+                <a href="/encuestas/agregar.php"><button class="index_button_two">Crear encuesta</button></a>
+                <a href="/encuestas/logout.php"><button class="index_button_two cerrar_sesion">Cerrar sesión</button></a>
             <?php else: ?>
                 <a href="/encuestas/login.php"><button class="index_button_one">Iniciar sesión</button></a>
                 <a href="/encuestas/register.php"><button class="index_button_two">Registro</button></a>
