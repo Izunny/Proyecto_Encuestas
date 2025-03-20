@@ -19,7 +19,6 @@
             <h2 class="title_page">Encuestas Dinámicas</h2>
         </div>
         <div class="header_two">
-            <a href="reset-password.php" class="change_pass_button">Editor</a>
 
             <?php if (isset($_SESSION['idusuario'])): ?>
                 <a href="/encuestas/logout.php"><button class="index_button_two">Cerrar sesión</button></a>

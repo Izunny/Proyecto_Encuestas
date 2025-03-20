@@ -22,11 +22,12 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 
         $tabla_enc = '<table class="table-welcome"> 
             <tr> 
-                <td> <font face="Arial">ID Encuesta</font> </td> 
+                <td> <font face="Arial">Seleccion</font> </td> 
                 <td> <font face="Arial">Nombre de<br>encuesta</font> </td> 
                 <td> <font face="Arial">Descripcion</font> </td> 
                 <td> <font face="Arial">Autor</font> </td> 
                 <td> <font face="Arial">Fecha</font> </td> 
+                <td> <font face="Arial">Estado</font> </td>
             </tr>';
 
         if ($result = $mysqli->query($query)) {
@@ -37,6 +38,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
                 $field3name = $row["descripcion"];
                 $field4name = $row["nombreU"];
                 $field5name = $row["fecha"]; 
+                
 
                 $tabla_enc .= '<tr> 
                         <td>'.$field1name.'</td> 
