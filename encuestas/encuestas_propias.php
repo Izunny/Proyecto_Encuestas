@@ -17,15 +17,16 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
         $password = ""; 
         $database = "db_encuestas"; 
         $mysqli = new mysqli("localhost", $username, $password, $database); 
-        $query = "SELECT * FROM enc_encuestasm ORDER BY idencuesta ASC";
+        $query = "SELECT * FROM enc_encuestasm INNER JOIN usuarios ON enc_encuestasm.idusuario=usuarios.idusuario ORDER BY idencuesta ASC";
 
+        <?php if (isset($_SESSION['idusuario'])): ?>
 
         $tabla_enc = '<table class="table-welcome"> 
             <tr> 
                 <td> <font face="Arial">Nombre de<br>encuesta</font> </td> 
                 <td> <font face="Arial">Descripcion</font> </td> 
+                <td> <font face="Arial">Autor</font> </td> 
                 <td> <font face="Arial">Fecha</font> </td> 
-                <td> <font face="Arial">Estado</font> </td>
             </tr>';
 
         if ($result = $mysqli->query($query)) {
@@ -33,27 +34,14 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
                 
                 $field1name = $row["nombre"];
                 $field2name = $row["descripcion"];
-                $field3name = $row["fecha"];
-                $estado = $row["activo"]; 
-                if ($estado = 'S') {
-                    $field4name = "Activa";
-                } else {
-                    $field4name = "No activa";
-                }
-
-                $id = $row["idencuesta"];
+                $field3name = $row["nombreU"];
+                $field4name = $row["fecha"]; 
 
                 $tabla_enc .= '<tr> 
                         <td>'.$field1name.'</td> 
                         <td>'.$field2name.'</td> 
                         <td>'.$field3name.'</td> 
-                        <td>'.$field4name.'</td>
-                        <td><a href="/encuestas/editar.php"><button class="dashboard_button" style="background-color:rgb(70, 70, 95)  !important">Editar</button></a></td>
-                        
-                        <!-- En esta proxima linea se le agrega una id en el url para buscar la encuesta en la base de datos -->
-                        <td><a href="/encuestas/responder.php?' . $id . '"><button class="dashboard_button" style="background-color:rgb(66, 91, 94)   !important">Vinculo</button></a></td>
-                        
-                        <td><a href="/encuestas/responder.php"><button class="dashboard_button" style="background-color:rgb(114, 119, 77) !important">Resultados</button></a></td>
+                        <td>'.$field4name.'</td> 
                     </tr>';
             }
             $tabla_enc .= '</table>';
@@ -78,24 +66,26 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
        
     <?php include __DIR__ . "/includes/header.php"; ?>
     <div class="items-welcome">
-        <div>
+        <div class="wrap-welcome">
             <h1>Hola, <b><?php echo htmlspecialchars($_SESSION["username"]); ?></b>.</h1>
         </div>
-        <div>
+
+        <div class="wrap-welcome">
             <h2>Encuestas activas</h2>
-            <p class="table_dashboard"> <?php echo $tabla_enc; ?> </p>
+            <p> <?php echo $tabla_enc; ?> </p>
         </div>
     </div>
-    
-    <!--
-    <nav>
-        <ul class="nav-menu">
-            <li><a href="#">Ver Resultados</a></li>
-            <li><a href="responder.php">Responder</a></li>
-            <li><a href="editar.php">Editar Encuesta</a></li>
-            <li><a href="agregar.php">Crear Encuesta</a></li>
-        </ul>
-    </nav>
-    -->
+
+    <footer class="footer">
+        <nav>
+            <ul class="nav-menu">
+                <li><a href="#">Responder</a></li>
+                <li><a href="#">Ver Resultados</a></li>
+                <li><a href="editar.php">Editar Encuesta</a></li>
+                <li><a href="agregar.php">Crear Encuesta</a></li>
+            </ul>
+        </nav>
+    </footer>
+
 </body>
 </html>

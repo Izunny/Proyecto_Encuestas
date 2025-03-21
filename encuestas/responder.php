@@ -2,6 +2,7 @@
 require 'config/database.php';
 session_start();
 
+/*
 if (!isset($_GET['id'])) {
     $sql = "SELECT idencuesta FROM enc_encuestasm LIMIT 1";
     $stmt = $pdo->query($sql);
@@ -13,7 +14,18 @@ if (!$encuesta_id) {
     echo json_encode(["status" => "error", "message" => "No hay encuestas en la base de datos"]);
     exit();
 }
+*/
 
+/* Para tomar el url actual con la direccion IP del servidor 
+$url_actual = $currentURL = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+*/
+
+/* Se toma el url con el host "localhost" */
+$url_actual = "http://localhost$_SERVER[REQUEST_URI]";
+/* Se toma todo el texto que esta al final del url, en
+este caso solo es el numero id de la encuesta */
+$id_url = parse_url($url_actual, PHP_URL_QUERY);
+$encuesta_id = $id_url;
 $encuesta = [];
 $preguntas = [];
 
@@ -51,7 +63,15 @@ $preguntas = $nuevas_preguntas;
     <link rel="stylesheet" href="/encuestas/assets/css/style.css">
 </head>
 <body>
-    <?php include __DIR__ . "/includes/header.php"; ?>
+
+    <div class="header-container">
+        <div class="header_one">
+            <a href="/encuestas/index.php">
+                <img class="logo" src="/encuestas/imagenes/logo4.webp" alt="logo">
+            </a>
+            <h2 class="title_page">Encuestas Dinámicas</h2>
+        </div>
+    </div>
 
     <section class="container mt-5">
         <section class="card">
