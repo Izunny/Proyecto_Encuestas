@@ -84,7 +84,7 @@ input{
 }
 
 a:hover{
-    color: #0088a9;
+    color: #51369A;
 }
 
 .index_button_one {
@@ -120,7 +120,7 @@ a:hover{
 }
 
 .index_button_two:hover{
-    background-color: rgba(0,136,169,0.8);
+    background-color: #51369A;
 }
 
 .container-one{
@@ -262,7 +262,7 @@ p.text {
 }
 
 th, td{
-    border: 4px solid rgb(137, 47, 137);
+    border: 4px solid #51369A;
     padding: 8px;
     text-align: left;
 }
@@ -281,7 +281,7 @@ th, td{
 }
 
 .dashboard_button:hover {
-    background-color: rgba(81, 54, 154, 0.8)    ;
+    background-color: #51369A;
 
 }
 
@@ -378,25 +378,25 @@ th, td{
     list-style: none;
     display: flex; /* Hace que los elementos estén en línea */
     justify-content: center; /* Centra el menú horizontalmente */
-    background-color: #211E3B; /* Color de fondo */
+    background-color: #3b2579; /* Color de fondo */
     padding: 10px;
     border-radius: 5px;
 }
 
 .nav-menu li {
-    margin: 0 15px; /* Espacio entre elementos */
+    margin: 0 15px; 
 }
 
 .nav-menu a {
     text-decoration: none;
-    color: white; /* Color del texto */
+    color: white; 
     font-size: 18px;
     font-weight: bold;
     transition: color 0.3s ease-in-out;
 }
 
 .nav-menu a:hover {
-    color: #00c8ff; /* Color al pasar el mouse */
+    color: #51369A; 
 }
 
 
@@ -432,4 +432,31 @@ select {
 
 option {
     color: rgb(39, 39, 39);
+}
+
+
+.table-welcome { 
+    width: 90%; 
+    margin: auto; 
+    border-collapse: collapse; 
+    
+}
+.table-welcome td, .table-welcome th { 
+    border: 2px solid #2c2347;
+    padding: 15px; 
+    
+}
+.table-welcome th { 
+    background-color: #51369A; 
+    text-align: center;
+}
+
+.items-welcome {
+    width: 100%;
+    padding: 0.5rem 5rem;
+}
+
+.card {
+    width: 80%;
+    padding: 0.5rem 5rem;
 }

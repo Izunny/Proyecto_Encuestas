@@ -1,101 +1,105 @@
 <?php
 // Se inicia la sesión
 session_start();
- 
-// Se verifica si el usuario ya ha ingresado, si no entonces se redirecciona
-// a la pagina de inicio
-if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
+
+// Se verifica si el usuario ha ingresado, si no, redirecciona a login.php
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     header("location: login.php");
     exit;
 }
+
+// Conexión a la base de datos
+$username = "root";
+$password = "";
+$database = "db_encuestas";
+$mysqli = new mysqli("localhost", $username, $password, $database);
+
+// Verificar conexión
+if ($mysqli->connect_error) {
+    die("Error de conexión: " . $mysqli->connect_error);
+}
+
+// Consulta para obtener las encuestas del usuario
+$query = "SELECT * FROM enc_encuestasm INNER JOIN usuarios ON enc_encuestasm.idusuario=usuarios.idusuario ORDER BY idencuesta ASC";
 ?>
 
-    <!-- Se muestra los datos principales de todas las encuestas -->
-    <p>
-    <?php 
-        $username = "root"; 
-        $password = ""; 
-        $database = "db_encuestas"; 
-        $mysqli = new mysqli("localhost", $username, $password, $database); 
-        $query = "SELECT * FROM enc_encuestasm ORDER BY idencuesta ASC";
-
-
-        $tabla_enc = '<table class="table-welcome"> 
-            <tr> 
-                <td> <font face="Arial">Nombre de<br>encuesta</font> </td> 
-                <td> <font face="Arial">Descripcion</font> </td> 
-                <td> <font face="Arial">Fecha</font> </td> 
-                <td> <font face="Arial">Estado</font> </td>
-            </tr>';
-
-        if ($result = $mysqli->query($query)) {
-            while ($row = $result->fetch_assoc()) {
-                
-                $field1name = $row["nombre"];
-                $field2name = $row["descripcion"];
-                $field3name = $row["fecha"];
-                $estado = $row["activo"]; 
-                if ($estado = 'S') {
-                    $field4name = "Activa";
-                } else {
-                    $field4name = "No activa";
-                }
-
-                $id = $row["idencuesta"];
-
-                $tabla_enc .= '<tr> 
-                        <td>'.$field1name.'</td> 
-                        <td>'.$field2name.'</td> 
-                        <td>'.$field3name.'</td> 
-                        <td>'.$field4name.'</td>
-                        <td><a href="/encuestas/editar.php"><button class="dashboard_button" style="background-color:rgb(70, 70, 95)  !important">Editar</button></a></td>
-                        
-                        <!-- En esta proxima linea se le agrega una id en el url para buscar la encuesta en la base de datos -->
-                        <td><a href="/encuestas/responder.php?' . $id . '"><button class="dashboard_button" style="background-color:rgb(66, 91, 94)   !important">Vinculo</button></a></td>
-                        
-                        <td><a href="/encuestas/responder.php"><button class="dashboard_button" style="background-color:rgb(114, 119, 77) !important">Resultados</button></a></td>
-                    </tr>';
-            }
-            $tabla_enc .= '</table>';
-            $result->free();
-        } 
-    ?>
-    </p>
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <title>Bienvenida</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" hreF="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
     <style>
-        body{ font: 14px sans-serif; text-align: center; }
+      
     </style>
 </head>
 <body>
 
-       
     <?php include __DIR__ . "/includes/header.php"; ?>
+
     <div class="items-welcome">
-        <div>
-            <h1>Hola, <b><?php echo htmlspecialchars($_SESSION["username"]); ?></b>.</h1>
+        <div class="wrap-welcome">
+            <h3>Hola, <b><?php echo htmlspecialchars($_SESSION["username"]); ?></b>.</h3>
         </div>
-        <div>
-            <h2>Encuestas activas</h2>
-            <p class="table_dashboard"> <?php echo $tabla_enc; ?> </p>
+
+        <div class="wrap-welcome">
+            <h3>Encuestas activas</h3>
+
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="#" id="verResultados">Ver Resultados</a></li>
+                    <li><a href="#" id="responderEncuesta">Compartir encuesta</a></li>
+                    <li><a href="#" id="editarEncuesta">Editar Encuesta</a></li>
+                </ul>
+            </nav>
+                
+            <form id="formSeleccionEncuesta">
+                <table class="table-welcome">
+                    <tr>
+                        <th>Seleccionar</th>
+                        <th>Titulo</th>
+                        <th>Descripción</th>
+                        <th>Autor</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                    </tr>
+                    <?php
+                    if ($result = $mysqli->query($query)) {
+                        while ($row = $result->fetch_assoc()) {
+                            $idEncuesta = $row["idencuesta"];
+                            $nombre = $row["nombre"];
+                            $descripcion = $row["descripcion"];
+                            $autor = $row["nombreU"];
+                            $fecha = $row["fecha"];
+                            $activo = $row["activo"];
+                            echo "<tr>
+                                    <td><input type='radio' name='seleccionEncuesta' value='$idEncuesta' onclick='actualizarEnlaces($idEncuesta)'></td>
+                                    <td>$nombre</td>
+                                    <td>$descripcion</td>
+                                    <td>$autor</td>
+                                    <td>$fecha</td>
+                                    <td>";
+                                        echo ($activo == 'S') ? 'Activo' : 'Inactivo'; 
+                            echo "</td>
+                                  </tr>";
+                        }
+                        $result->free();
+                    }
+                    ?>
+                </table>
+            </form>
         </div>
+
     </div>
-    
-    <!--
-    <nav>
-        <ul class="nav-menu">
-            <li><a href="#">Ver Resultados</a></li>
-            <li><a href="responder.php">Responder</a></li>
-            <li><a href="editar.php">Editar Encuesta</a></li>
-            <li><a href="agregar.php">Crear Encuesta</a></li>
-        </ul>
-    </nav>
-    -->
+
+    <script>
+        function actualizarEnlaces(idEncuesta) {
+            document.getElementById("verResultados").href = "resultados.php?id=" + idEncuesta;
+            document.getElementById("responderEncuesta").href = "responder.php?id=" + idEncuesta;
+            document.getElementById("editarEncuesta").href = "editar.php?id=" + idEncuesta;
+        }
+    </script>
+
 </body>
 </html>

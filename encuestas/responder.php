@@ -2,19 +2,7 @@
 require 'config/database.php';
 session_start();
 
-/*
-if (!isset($_GET['id'])) {
-    $sql = "SELECT idencuesta FROM enc_encuestasm LIMIT 1";
-    $stmt = $pdo->query($sql);
-    $result = $stmt->fetch();
-    $encuesta_id = $result['idencuesta'] ?? null;
-}
 
-if (!$encuesta_id) {
-    echo json_encode(["status" => "error", "message" => "No hay encuestas en la base de datos"]);
-    exit();
-}
-*/
 
 /* Para tomar el url actual con la direccion IP del servidor 
 $url_actual = $currentURL = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
@@ -25,18 +13,27 @@ $url_actual = "http://localhost$_SERVER[REQUEST_URI]";
 /* Se toma todo el texto que esta al final del url, en
 este caso solo es el numero id de la encuesta */
 $id_url = parse_url($url_actual, PHP_URL_QUERY);
-$encuesta_id = $id_url;
+$idEncuesta = $id_url;
+
+if (isset($_GET['id'])) {
+    $idEncuesta = $_GET['id'];
+    // Aquí puedes usar $idEncuesta para cargar la encuesta correspondiente desde la base de datos
+} else {
+    echo "No se ha seleccionado ninguna encuesta.";
+    exit;
+}
+
 $encuesta = [];
 $preguntas = [];
 
 $sql = "SELECT * FROM enc_encuestasm WHERE idencuesta = :id";
 $stmt = $pdo->prepare($sql);
-$stmt->execute(['id' => $encuesta_id]);
+$stmt->execute(['id' => $idEncuesta]);
 $encuesta = $stmt->fetch(PDO::FETCH_ASSOC);
 
 $sql_preguntas = "SELECT * FROM enc_pregunta WHERE idencuesta = :id";
 $stmt_preguntas = $pdo->prepare($sql_preguntas);
-$stmt_preguntas->execute(['id' => $encuesta_id]);
+$stmt_preguntas->execute(['id' => $idEncuesta]);
 $preguntas = $stmt_preguntas->fetchAll(PDO::FETCH_ASSOC);
 
 $nuevas_preguntas = [];
@@ -80,7 +77,7 @@ $preguntas = $nuevas_preguntas;
             </header>
             <div class="card-body">
                 <form action="guardar_respuestas.php" method="POST">
-                    <input type="hidden" name="idencuesta" value="<?php echo $encuesta_id; ?>">
+                    <input type="hidden" name="idencuesta" value="<?php echo $idEncuesta; ?>">
 
                     <?php foreach ($preguntas as $pregunta): ?>
                         <div class="form-group mt-3">

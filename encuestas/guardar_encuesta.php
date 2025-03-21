@@ -12,14 +12,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $pdo->beginTransaction();
 
-        $encuesta_id = $_POST['idencuesta'] ?? null;
+        $idEncuesta = $_POST['idencuesta'] ?? null;
         $titulo = trim($_POST['titulo']);
         $descripcion = trim($_POST['descripcion']);
         $fecha = trim($_POST['fecha']);
         $estado = trim($_POST['estado']);
         $idusuario = $_SESSION['idusuario'];
 
-        if ($encuesta_id) {
+        if ($idEncuesta) {
             $sql = "UPDATE enc_encuestasm 
                     SET nombre = :titulo, descripcion = :descripcion, fecha = STR_TO_DATE(:fecha, '%d/%m/%Y'), activo = :estado 
                     WHERE idencuesta = :idencuesta";
@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 'descripcion' => $descripcion,
                 'fecha' => $fecha,
                 'estado' => $estado,
-                'idencuesta' => $encuesta_id
+                'idencuesta' => $idEncuesta
             ]);
         } else {
             $sql = "INSERT INTO enc_encuestasm (nombre, descripcion, fecha, activo, idusuario) 
@@ -42,14 +42,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 'estado' => $estado,
                 'idusuario' => $idusuario
             ]);
-            $encuesta_id = $pdo->lastInsertId();
+            $idEncuesta = $pdo->lastInsertId();
         }
 
         $preguntas = $_POST['preguntas'] ?? [];
 
-        if ($encuesta_id && !empty($preguntas)) {
+        if ($idEncuesta && !empty($preguntas)) {
             $stmt = $pdo->prepare("DELETE FROM enc_pregunta WHERE idencuesta = ?");
-            $stmt->execute([$encuesta_id]);
+            $stmt->execute([$idEncuesta]);
         }
 
         // Mapeo de tipos de pregunta de texto a número
@@ -78,7 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                              VALUES (:idencuesta, :textopregunta, :idtipopregunta, :requerida)";
             $stmt_pregunta = $pdo->prepare($sql_pregunta);
             $stmt_pregunta->execute([
-                'idencuesta' => $encuesta_id,
+                'idencuesta' => $idEncuesta,
                 'textopregunta' => $pregunta['titulo'],
                 'idtipopregunta' => $id_tipo_pregunta,
                 'requerida' => isset($pregunta['requerida']) ? 1 : 0

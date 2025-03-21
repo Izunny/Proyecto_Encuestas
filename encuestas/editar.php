@@ -3,32 +3,28 @@ require 'config/database.php';
 session_start();
 // esta seccion se debe cambiar solo es de pruebas, la encuesta debe ser 
 // llamada desde el welcome
-if (!isset($_GET['id'])) {
-    $sql = "SELECT idencuesta FROM enc_encuestasm LIMIT 1";
-    $stmt = $pdo->query($sql);
-    $result = $stmt->fetch();
-    $encuesta_id = $result['idencuesta'] ?? null;
-}
-
-if (!$encuesta_id) {
-    echo json_encode(["status" => "error", "message" => "No hay encuestas en la base de datos"]);
-    exit();
+if (isset($_GET['id'])) {
+    $idEncuesta = $_GET['id'];
+    // Aquí puedes usar $idEncuesta para cargar la encuesta correspondiente desde la base de datos
+} else {
+    echo "No se ha seleccionado ninguna encuesta.";
+    exit;
 }
 
 $encuesta = [];
 $preguntas = [];
 
-if ($encuesta_id) {
+if ($idEncuesta) {
     // Obtener los datos de la encuesta
     $sql = "SELECT * FROM enc_encuestasm WHERE idencuesta = :id";
     $stmt = $pdo->prepare($sql);
-    $stmt->execute(['id' => $encuesta_id]);
+    $stmt->execute(['id' => $idEncuesta]);
     $encuesta = $stmt->fetch(PDO::FETCH_ASSOC);
 
     // Obtener las preguntas de la encuesta
     $sql_preguntas = "SELECT * FROM enc_pregunta WHERE idencuesta = :id";
     $stmt_preguntas = $pdo->prepare($sql_preguntas);
-    $stmt_preguntas->execute(['id' => $encuesta_id]);
+    $stmt_preguntas->execute(['id' => $idEncuesta]);
     $preguntas = $stmt_preguntas->fetchAll(PDO::FETCH_ASSOC);
 
     // Obtener las opciones de cada pregunta
@@ -68,7 +64,7 @@ $preguntas = $nuevas_preguntas; // Reemplazar el array original con el corregido
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $encuesta_id ? 'Editar' : 'Agregar'; ?> Encuesta</title>
+    <title><?php echo $idEncuesta ? 'Editar' : 'Agregar'; ?> Encuesta</title>
     <link rel="stylesheet" href="<?php echo '/encuestas/assets/css/style.css'; ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
@@ -79,11 +75,11 @@ $preguntas = $nuevas_preguntas; // Reemplazar el array original con el corregido
     <section class="container mt-5">
         <section class="card">
             <header class="card-header bg-primary text-white">
-                <h2 class="card-title"><?php echo $encuesta_id ? 'Editar' : 'Agregar'; ?> Encuesta</h2>
+                <h2 class="card-title"><?php echo $idEncuesta ? 'Editar' : 'Agregar'; ?> Encuesta</h2>
             </header>
             <div class="card-body">
                 <form action="guardar_encuesta.php" method="POST">
-                    <input type="hidden" name="idencuesta" value="<?php echo $encuesta_id; ?>">
+                    <input type="hidden" name="idencuesta" value="<?php echo $idEncuesta; ?>">
                     
                     <div class="row">
                         <div class="form-group col-12 col-md-2">
