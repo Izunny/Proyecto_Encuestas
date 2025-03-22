@@ -27,8 +27,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $idrespuestas = $pdo->lastInsertId(); 
 
         foreach ($respuestas as $idpregunta => $respuesta) {
-            
             if (is_array($respuesta)) {
+                // opción múltiple
                 foreach ($respuesta as $idopcion) {
                     $sql_opcion = "INSERT INTO enc_respuestaopcion (idopciones, idrespuestas, idpregunta) 
                                    VALUES (:idopciones, :idrespuestas, :idpregunta)";
@@ -39,7 +39,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         'idpregunta' => $idpregunta
                     ]);
                 }
+            } elseif (is_numeric($respuesta)) {
+                
+                $sql_opcion = "INSERT INTO enc_respuestaopcion (idopciones, idrespuestas, idpregunta) 
+                               VALUES (:idopciones, :idrespuestas, :idpregunta)";
+                $stmt_opcion = $pdo->prepare($sql_opcion);
+                $stmt_opcion->execute([
+                    'idopciones' => $respuesta,  // guarda el ID de la opcion seleccionada
+                    'idrespuestas' => $idrespuestas,
+                    'idpregunta' => $idpregunta
+                ]);
             } else {
+                // tipo texto
                 $sql_texto = "INSERT INTO enc_respuestatexo (respuesta, idrespuestas, idpregunta) 
                               VALUES (:respuesta, :idrespuestas, :idpregunta)";
                 $stmt_texto = $pdo->prepare($sql_texto);
@@ -50,6 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 ]);
             }
         }
+        
 
         $pdo->commit();
         echo json_encode(["status" => "success", "message" => "Respuestas guardadas correctamente."]);
