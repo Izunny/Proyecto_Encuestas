@@ -92,13 +92,48 @@ $query = "SELECT * FROM enc_encuestasm INNER JOIN usuarios ON enc_encuestasm.idu
         </div>
 
     </div>
+    <?php include __DIR__ . "/includes/modal_alerta.php"; ?>
 
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/encuestas/assets/js/alertas.js"></script>
     <script>
         function actualizarEnlaces(idEncuesta) {
             document.getElementById("verResultados").href = "resultados.php?id=" + idEncuesta;
             document.getElementById("responderEncuesta").href = "responder.php?id=" + idEncuesta;
             document.getElementById("editarEncuesta").href = "editar.php?id=" + idEncuesta;
         }
+
+        function actualizarEnlaces(idEncuesta) {
+        document.getElementById("verResultados").href = "resultados.php?id=" + idEncuesta;
+        document.getElementById("responderEncuesta").href = "responder.php?id=" + idEncuesta;
+        document.getElementById("editarEncuesta").href = "editar.php?id=" + idEncuesta;
+    }
+
+    document.getElementById("verResultados").addEventListener("click", function(event) {
+        const seleccionado = document.querySelector("input[name='seleccionEncuesta']:checked");
+        if (!seleccionado) {
+            event.preventDefault(); // Evitar que el enlace funcione
+            mostrarAlerta("Error", "Por favor, selecciona una encuesta para ver los resultados.", "error");
+        }
+    });
+
+    document.getElementById("editarEncuesta").addEventListener("click", function(event) {
+        const seleccionado = document.querySelector("input[name='seleccionEncuesta']:checked");
+        if (!seleccionado) {
+            event.preventDefault(); // Evitar que el enlace funcione
+            mostrarAlerta("Error", "Por favor, selecciona una encuesta para editarla.", "error");
+        }
+    });
+
+    document.getElementById("responderEncuesta").addEventListener("click", function(event) {
+        const seleccionado = document.querySelector("input[name='seleccionEncuesta']:checked");
+        if (!seleccionado) {
+            event.preventDefault(); // Evitar que el enlace funcione
+            mostrarAlerta("Error", "Por favor, selecciona una encuesta para responderla.", "error");
+        }
+    });
+
     </script>
 
 </body>

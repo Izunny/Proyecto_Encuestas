@@ -52,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->execute([$idEncuesta]);
         }
 
-        // Mapeo de tipos de pregunta de texto a número
+        // tipos de pregunta 
         $tipos_pregunta = [
             "texto" => 1,
             "texto_abierto" => 2,
@@ -98,12 +98,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         $pdo->commit();
-        echo json_encode(["status" => "success", "message" => "Encuesta guardada correctamente."]);
-        exit();
-
-    } catch (Exception $e) {
-        $pdo->rollBack();
-        echo json_encode(["status" => "error", "message" => "Error al guardar la encuesta: " . $e->getMessage()]);
-    }
+    echo json_encode(["status" => "success", "message" => "Encuesta guardada correctamente."]);
+} catch (Exception $e) {
+    $pdo->rollBack();
+    echo json_encode(["status" => "error", "message" => "Error al guardar la encuesta: " . $e->getMessage()]);
+}
 }
 ?>

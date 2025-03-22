@@ -161,7 +161,11 @@ $preguntas = $nuevas_preguntas; // Reemplazar el array original con el corregido
             </div>
         </section>
     </section>
+    <?php include __DIR__ . "/includes/modal_alerta.php"; ?>
 
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/encuestas/assets/js/alertas.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.es.min.js"></script>
@@ -244,6 +248,34 @@ $preguntas = $nuevas_preguntas; // Reemplazar el array original con el corregido
         function eliminarOpcion(element) {
             element.parentElement.remove();
         }
+
+        document.addEventListener("DOMContentLoaded", function() {
+    const form = document.querySelector("form");
+
+    form.addEventListener("submit", function(event) {
+        event.preventDefault(); // Evitar el envío tradicional del formulario
+
+        const formData = new FormData(form);
+
+        fetch("guardar_encuesta.php", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            mostrarAlerta(
+                data.status === "success" ? "¡Éxito!" : "Error",
+                data.message,
+                data.status,
+                data.status === "success" ? "welcome.php" : null
+            );
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            mostrarAlerta("Error", "Hubo un problema al enviar el formulario.", "error");
+        });
+    });
+});
     </script>
 </body>
 </html>

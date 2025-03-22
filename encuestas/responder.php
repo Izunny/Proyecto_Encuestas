@@ -2,23 +2,10 @@
 require 'config/database.php';
 session_start();
 
+// Obtener el ID de la encuesta desde la URL
+$idEncuesta = $_GET['id'] ?? null;
 
-
-/* Para tomar el url actual con la direccion IP del servidor 
-$url_actual = $currentURL = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-*/
-
-/* Se toma el url con el host "localhost" */
-$url_actual = "http://localhost$_SERVER[REQUEST_URI]";
-/* Se toma todo el texto que esta al final del url, en
-este caso solo es el numero id de la encuesta */
-$id_url = parse_url($url_actual, PHP_URL_QUERY);
-$idEncuesta = $id_url;
-
-if (isset($_GET['id'])) {
-    $idEncuesta = $_GET['id'];
-    // Aquí puedes usar $idEncuesta para cargar la encuesta correspondiente desde la base de datos
-} else {
+if (!$idEncuesta) {
     echo "No se ha seleccionado ninguna encuesta.";
     exit;
 }
@@ -26,16 +13,19 @@ if (isset($_GET['id'])) {
 $encuesta = [];
 $preguntas = [];
 
+// Obtener la encuesta
 $sql = "SELECT * FROM enc_encuestasm WHERE idencuesta = :id";
 $stmt = $pdo->prepare($sql);
 $stmt->execute(['id' => $idEncuesta]);
 $encuesta = $stmt->fetch(PDO::FETCH_ASSOC);
 
+// Obtener preguntas
 $sql_preguntas = "SELECT * FROM enc_pregunta WHERE idencuesta = :id";
 $stmt_preguntas = $pdo->prepare($sql_preguntas);
 $stmt_preguntas->execute(['id' => $idEncuesta]);
 $preguntas = $stmt_preguntas->fetchAll(PDO::FETCH_ASSOC);
 
+// Obtener opciones
 $nuevas_preguntas = [];
 foreach ($preguntas as $pregunta) {
     $sql_opciones = "SELECT * FROM enc_opcion WHERE idpregunta = :idpregunta";
@@ -76,7 +66,7 @@ $preguntas = $nuevas_preguntas;
                 <h2 class="card-title"><?php echo $encuesta['nombre'] ?? 'Encuesta'; ?></h2>
             </header>
             <div class="card-body">
-                <form action="guardar_respuestas.php" method="POST">
+                <form id="formEncuesta">
                     <input type="hidden" name="idencuesta" value="<?php echo $idEncuesta; ?>">
 
                     <?php foreach ($preguntas as $pregunta): ?>
@@ -111,12 +101,44 @@ $preguntas = $nuevas_preguntas;
                     <div class="mt-4">
                         <button type="submit" class="btn btn-primary">Enviar Respuestas</button>
                         <button type="button" class="btn btn-default" onclick="window.location.href='welcome.php'">
-                                Cancelar <i class="fa fa-ban"></i>
-                            </button>
+                            Cancelar <i class="fa fa-ban"></i>
+                        </button>
                     </div>
                 </form>
             </div>
         </section>
     </section>
+
+    
+<?php include __DIR__ . "/includes/modal_alerta.php"; ?>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/encuestas/assets/js/alertas.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("formEncuesta").addEventListener("submit", function(event) {
+        event.preventDefault(); // Evita que el formulario recargue la página
+
+        const formData = new FormData(this);
+
+        fetch("guardar_respuestas.php", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            mostrarAlerta(
+                data.status === "success" ? "¡Éxito!" : "Error",
+                data.message,
+                data.status,
+                data.status === "success" ? "welcome.php" : null
+            );
+        })
+        .catch(error => console.error("Error:", error));
+    });
+});
+</script>
+
 </body>
 </html>

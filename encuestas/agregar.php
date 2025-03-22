@@ -67,7 +67,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -82,64 +81,68 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <!-- Encabezado -->
     <?php include __DIR__ . "/includes/header.php"; ?>
 
-
-    
     <section class="container mt-5">
-    <section class="card">
-        <header class="card-header bg-primary text-white">
-            <h2 class="card-title">Agregar Encuesta</h2>
-        </header>
-        <div class="card-body">
-             <form action="guardar_encuesta.php" method="POST">
-
-            
-                <div class="row">
-                    <div class="form-group col-12 col-md-2">
-                        <label>Título:</label>
-                        <input type="text" name="titulo" class="form-control" required>
-                    </div>
-                    <div class="form-group col-12 col-md-3">
-                        <label>Descripción:</label>
-                        <textarea stai name="descripcion" class="form-control" required></textarea>
-                    </div>
-                    <div class="form-group col-10 col-md-1">
-                        <label>Estado:</label><br>
-                        <select class="form-control1" name="estado">
-                            <option value="S">Activo</option>
-                            <option value="N">Inactivo</option>
-                        </select>
-                    </div>
-                    <div class="form-group col-10 col-md-1">
-                        <label>Fecha:</label><br>
-                        <div class="input-group">
-                            <span class="input-group-addon">
-                            </span>
-                            <input type="text" data-plugin-datepicker class="form-control" data-input-mask="31/12/9999" placeholder="DD/MM/AAAA" name="fecha" id="fecha" readonly>
+        <section class="card">
+            <header class="card-header bg-primary text-white">
+                <h2 class="card-title">Agregar Encuesta</h2>
+            </header>
+            <div class="card-body">
+                <form id="formAgregarEncuesta">
+                    <div class="row">
+                        <div class="form-group col-12 col-md-2">
+                            <label>Título:</label>
+                            <input type="text" name="titulo" class="form-control" required>
+                        </div>
+                        <div class="form-group col-12 col-md-3">
+                            <label>Descripción:</label>
+                            <textarea name="descripcion" class="form-control" required></textarea>
+                        </div>
+                        <div class="form-group col-10 col-md-1">
+                            <label>Estado:</label><br>
+                            <select class="form-control1" name="estado">
+                                <option value="S">Activo</option>
+                                <option value="N">Inactivo</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-10 col-md-1">
+                            <label>Fecha:</label><br>
+                            <div class="input-group">
+                                <input type="text" data-plugin-datepicker class="form-control" data-input-mask="31/12/9999" placeholder="DD/MM/AAAA" name="fecha" id="fecha" readonly>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="row">
-                <h4 class="mt-2">Preguntas</h4>
-                <div id="panelPreguntasContainer"></div>
-                </div>
-                
-                
-                <div class="row">
-                    <div class="col-12">
-                        <button type="button" class="btn btn-success mt-3" onclick="agregarPreguntaPanel()">Agregar Pregunta <i class="fa fa-plus"></i></button>
-                        <button type="submit" class="btn btn-primary">Guardar Encuesta <i class="fa fa-save"></i></button>
-                        <button type="button" class="btn btn-default" onclick="window.location.href='welcome.php'">
-                            Cancelar <i class="fa fa-ban"></i>
-                        </button>
-
+                    <div class="row">
+                        <h4 class="mt-2">Preguntas</h4>
+                        <div id="panelPreguntasContainer"></div>
                     </div>
-                </div>
-            </form>
-        </div>
-    </section>
-</section>
 
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="button" class="btn btn-success mt-3" onclick="agregarPreguntaPanel()">Agregar Pregunta <i class="fa fa-plus"></i></button>
+                            <button type="submit" class="btn btn-primary">Guardar Encuesta <i class="fa fa-save"></i></button>
+                            <button type="button" class="btn btn-default" onclick="window.location.href='welcome.php'">
+                                Cancelar <i class="fa fa-ban"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </section>
+
+    <!-- Ventana emergente personalizada -->
+    <div id="customAlert" class="custom-alert">
+        <div class="custom-alert-content">
+            <h3 id="customAlertTitle"></h3>
+            <p id="customAlertMessage"></p>
+            <button id="customAlertClose">OK</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/encuestas/assets/js/alertas.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.es.min.js"></script>
@@ -168,29 +171,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             preguntaDiv.classList.add('form-group', 'mt-2');
             preguntaDiv.innerHTML = `
                 <label>Pregunta ${index}:</label>
-                
                 <div class="row">
-                <input type="text" name="preguntas[${index}][titulo]" class="form-control" required>
-                
-                <div class="form-group col-md-10 mt-2">
-                    <label>Tipo de pregunta:</label>
-                    <select class="form-control" name="preguntas[${index}][tipo]" onchange="cambiarTipoPregunta(${index}, this.value)">
-                        <option value="texto">Texto</option>
-                        <option value="texto_abierto">Texto abierto</option>
-                        <option value="opcion_unica">Opción única</option>
-                        <option value="opcion_multiple">Opción múltiple</option>
-                    </select>
+                    <input type="text" name="preguntas[${index}][titulo]" class="form-control" required>
+                    <div class="form-group col-md-10 mt-2">
+                        <label>Tipo de pregunta:</label>
+                        <select class="form-control" name="preguntas[${index}][tipo]" onchange="cambiarTipoPregunta(${index}, this.value)">
+                            <option value="1">Texto</option>
+                            <option value="2">Texto abierto</option>
+                            <option value="3">Opción única</option>
+                            <option value="4">Opción múltiple</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-10 mt-2">
+                        <label>
+                            Requerida  
+                            <input type="checkbox" name="preguntas[${index}][requerida]" value="1">
+                        </label>
+                    </div>
                 </div>
-
-                <div class="form-group col-md-10 mt-2">
-                    <label>
-                        Requerida  
-                        <input type="checkbox" name="preguntas[${index}][requerida]" value="1">
-                    </label>
-                </div>
-            </div>
                 <div id="opcionesPregunta${index}"></div>
-
                 <button type="button" class="btn btn-danger btn-sm mt-2" onclick="this.parentNode.remove()">Eliminar</button>
             `;
 
@@ -202,7 +201,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             const contenedorOpciones = document.getElementById(`opcionesPregunta${idPregunta}`);
             contenedorOpciones.innerHTML = '';
 
-            if (tipo === 'opcion_unica' || tipo === 'opcion_multiple') {
+            if (tipo === '3' || tipo === '4') { // 3 = opción única, 4 = opción múltiple
                 const opcionesHTML = `
                     <div class="form-group col-12 col-md-2">
                         <label>Opciones:</label>
@@ -231,9 +230,74 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         function eliminarOpcion(element) {
             element.parentElement.remove();
         }
+
+       document.addEventListener("DOMContentLoaded", function() {
+    const form = document.getElementById("formAgregarEncuesta");
+
+    form.addEventListener("submit", function(event) {
+        event.preventDefault(); // Evitar el envío tradicional del formulario
+
+        // Validar que el título y la descripción no estén vacíos
+        const titulo = form.querySelector("input[name='titulo']").value.trim();
+        const descripcion = form.querySelector("textarea[name='descripcion']").value.trim();
+
+        if (!titulo || !descripcion) {
+            mostrarAlerta("Error", "El título y la descripción son campos obligatorios.", "error");
+            return;
+        }
+
+        // Validar que haya al menos una pregunta
+        const preguntas = document.querySelectorAll("#panelPreguntasContainer .form-group");
+        if (preguntas.length === 0) {
+            mostrarAlerta("Error", "Debes agregar al menos una pregunta.", "error");
+            return;
+        }
+
+        // Validar que las preguntas de opción única o múltiple tengan opciones
+        const preguntasConOpciones = document.querySelectorAll("#panelPreguntasContainer .form-group");
+        let errorOpciones = false;
+
+        preguntasConOpciones.forEach(pregunta => {
+            const selectTipo = pregunta.querySelector("select[name$='[tipo]']");
+            const opciones = pregunta.querySelectorAll("input[name$='[opciones][]']");
+
+            // Verificar si el select de tipo existe
+            if (selectTipo) {
+                const tipo = selectTipo.value;
+
+                // Si es opción única o múltiple, verificar que tenga opciones
+                if ((tipo === '3' || tipo === '4') && opciones.length === 0) {
+                    errorOpciones = true;
+                }
+            }
+        });
+
+        if (errorOpciones) {
+            mostrarAlerta("Error", "Las preguntas de opción única o múltiple deben tener al menos una opción.", "error");
+            return;
+        }
+
+        const formData = new FormData(form);
+
+        fetch("guardar_encuesta.php", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            mostrarAlerta(
+                data.status === "success" ? "¡Éxito!" : "Error",
+                data.message,
+                data.status,
+                data.status === "success" ? "welcome.php" : null
+            );
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            mostrarAlerta("Error", "Hubo un problema al enviar el formulario.", "error");
+        });
+    });
+});
     </script>
-
-
 </body>
 </html>
-
