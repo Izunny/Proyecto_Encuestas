@@ -1,25 +1,20 @@
 <?php
-// Se inicia la sesión
 session_start();
 
-// Se verifica si el usuario ha ingresado, si no, redirecciona a login.php
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     header("location: login.php");
     exit;
 }
 
-// Conexión a la base de datos
 $username = "root";
 $password = "";
 $database = "db_encuestas";
 $mysqli = new mysqli("localhost", $username, $password, $database);
 
-// Verificar conexión
 if ($mysqli->connect_error) {
     die("Error de conexión: " . $mysqli->connect_error);
 }
 
-// Consulta para obtener las encuestas del usuario
 $query = "SELECT * FROM enc_encuestasm INNER JOIN usuarios ON enc_encuestasm.idusuario=usuarios.idusuario ORDER BY idencuesta ASC";
 ?>
 
@@ -30,9 +25,6 @@ $query = "SELECT * FROM enc_encuestasm INNER JOIN usuarios ON enc_encuestasm.idu
     <title>Bienvenida</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="./assets/css/style.css">
-    <style>
-      
-    </style>
 </head>
 <body>
 
@@ -44,13 +36,12 @@ $query = "SELECT * FROM enc_encuestasm INNER JOIN usuarios ON enc_encuestasm.idu
         </div>
 
         <div class="wrap-welcome">
-            <h3>Encuestas activas</h3>
-
             <nav>
                 <ul class="nav-menu">
                     <li><a href="#" id="verResultados">Ver Resultados</a></li>
                     <li><a href="#" id="responderEncuesta">Compartir encuesta</a></li>
                     <li><a href="#" id="editarEncuesta">Editar Encuesta</a></li>
+                    <li><a href="#" id="eliminarEncuesta">Eliminar Encuesta</a></li> <!-- ✅ ID corregido -->
                 </ul>
             </nav>
                 
@@ -58,7 +49,7 @@ $query = "SELECT * FROM enc_encuestasm INNER JOIN usuarios ON enc_encuestasm.idu
                 <table class="table-welcome">
                     <tr>
                         <th>Seleccionar</th>
-                        <th>Titulo</th>
+                        <th>Título</th>
                         <th>Descripción</th>
                         <th>Autor</th>
                         <th>Fecha</th>
@@ -79,9 +70,7 @@ $query = "SELECT * FROM enc_encuestasm INNER JOIN usuarios ON enc_encuestasm.idu
                                     <td>$descripcion</td>
                                     <td>$autor</td>
                                     <td>$fecha</td>
-                                    <td>";
-                                        echo ($activo == 'S') ? 'Activo' : 'Inactivo'; 
-                            echo "</td>
+                                    <td>" . ($activo == 'S' ? 'Activo' : 'Inactivo') . "</td>
                                   </tr>";
                         }
                         $result->free();
@@ -90,13 +79,13 @@ $query = "SELECT * FROM enc_encuestasm INNER JOIN usuarios ON enc_encuestasm.idu
                 </table>
             </form>
         </div>
-
     </div>
+
     <?php include __DIR__ . "/includes/modal_alerta.php"; ?>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/encuestas/assets/js/alertas.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="/encuestas/assets/js/alertas.js"></script>
     <script>
         function actualizarEnlaces(idEncuesta) {
             document.getElementById("verResultados").href = "resultados.php?id=" + idEncuesta;
@@ -104,36 +93,60 @@ $query = "SELECT * FROM enc_encuestasm INNER JOIN usuarios ON enc_encuestasm.idu
             document.getElementById("editarEncuesta").href = "editar.php?id=" + idEncuesta;
         }
 
-        function actualizarEnlaces(idEncuesta) {
-        document.getElementById("verResultados").href = "resultados.php?id=" + idEncuesta;
-        document.getElementById("responderEncuesta").href = "responder.php?id=" + idEncuesta;
-        document.getElementById("editarEncuesta").href = "editar.php?id=" + idEncuesta;
-    }
+        document.getElementById("verResultados").addEventListener("click", function(event) {
+            if (!document.querySelector("input[name='seleccionEncuesta']:checked")) {
+                event.preventDefault();
+                mostrarAlerta("Error", "Por favor, selecciona una encuesta para ver los resultados.", "error");
+            }
+        });
 
-    document.getElementById("verResultados").addEventListener("click", function(event) {
-        const seleccionado = document.querySelector("input[name='seleccionEncuesta']:checked");
-        if (!seleccionado) {
-            event.preventDefault(); // Evitar que el enlace funcione
-            mostrarAlerta("Error", "Por favor, selecciona una encuesta para ver los resultados.", "error");
-        }
-    });
+        document.getElementById("editarEncuesta").addEventListener("click", function(event) {
+            if (!document.querySelector("input[name='seleccionEncuesta']:checked")) {
+                event.preventDefault();
+                mostrarAlerta("Error", "Por favor, selecciona una encuesta para editarla.", "error");
+            }
+        });
 
-    document.getElementById("editarEncuesta").addEventListener("click", function(event) {
-        const seleccionado = document.querySelector("input[name='seleccionEncuesta']:checked");
-        if (!seleccionado) {
-            event.preventDefault(); // Evitar que el enlace funcione
-            mostrarAlerta("Error", "Por favor, selecciona una encuesta para editarla.", "error");
-        }
-    });
+        document.getElementById("responderEncuesta").addEventListener("click", function(event) {
+            if (!document.querySelector("input[name='seleccionEncuesta']:checked")) {
+                event.preventDefault();
+                mostrarAlerta("Error", "Por favor, selecciona una encuesta para responderla.", "error");
+            }
+        });
 
-    document.getElementById("responderEncuesta").addEventListener("click", function(event) {
-        const seleccionado = document.querySelector("input[name='seleccionEncuesta']:checked");
-        if (!seleccionado) {
-            event.preventDefault(); // Evitar que el enlace funcione
-            mostrarAlerta("Error", "Por favor, selecciona una encuesta para responderla.", "error");
-        }
-    });
+        document.getElementById("eliminarEncuesta").addEventListener("click", function(event) {
+            const seleccionado = document.querySelector("input[name='seleccionEncuesta']:checked");
 
+            if (!seleccionado) {
+                mostrarAlerta("Error", "Por favor, selecciona una encuesta para eliminar.", "error");
+                return;
+            }
+
+            const idEncuesta = seleccionado.value;
+
+            if (!confirm("¿Estás seguro de que quieres eliminar esta encuesta? Esta acción no se puede deshacer.")) {
+                return;
+            }
+
+            fetch("eliminar_encuesta.php", {
+                method: "POST",
+                body: new URLSearchParams({ idEncuesta: idEncuesta }),
+                headers: { "Content-Type": "application/x-www-form-urlencoded" }
+            })
+            .then(response => response.json())
+            .then(data => {
+                mostrarAlerta(
+                    data.status === "success" ? "¡Éxito!" : "Error",
+                    data.message,
+                    data.status,
+                    data.status === "success" ? "welcome.php" : null
+                );
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                mostrarAlerta("Error", "Hubo un problema al eliminar la encuesta.", "error");
+            });
+        });
     </script>
 
 </body>

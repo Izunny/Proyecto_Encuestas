@@ -201,9 +201,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             const contenedorOpciones = document.getElementById(`opcionesPregunta${idPregunta}`);
             contenedorOpciones.innerHTML = '';
 
-            if (tipo === '3' || tipo === '4') { // 3 = opción única, 4 = opción múltiple
+            if (tipo === '3' || tipo === '4') { 
                 const opcionesHTML = `
-                    <div class="form-group col-12 col-md-2">
+                    <div class="form-group col-10 col-md-2">
                         <label>Opciones:</label>
                         <button type="button" class="btn btn-default" onclick="agregarOpcion(${idPregunta})">Agregar otra opción</button>
                         <div class="opcion-item mt-2">
@@ -221,7 +221,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             const nuevaOpcion = document.createElement('div');
             nuevaOpcion.classList.add('opcion-item', 'mt-2');
             nuevaOpcion.innerHTML = `
-                <input type="text" name="preguntas[${idPregunta}][opciones][]" class="form-control" placeholder="Ingrese una opción">
+                <input type="text" name="preguntas[${idPregunta}][opciones][]" class="form-control" placeholder="Ingrese una opción" >
                 <button type="button" class="btn btn-default" onclick="eliminarOpcion(this)">Eliminar</button>
             `;
             contenedorOpciones.appendChild(nuevaOpcion);
@@ -231,11 +231,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             element.parentElement.remove();
         }
 
-       document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function() {
     const form = document.getElementById("formAgregarEncuesta");
 
     form.addEventListener("submit", function(event) {
-        event.preventDefault(); // Evitar el envío tradicional del formulario
+        event.preventDefault(); // Evitar recargar la página al enviar el formulario
 
         // Validar que el título y la descripción no estén vacíos
         const titulo = form.querySelector("input[name='titulo']").value.trim();
@@ -253,30 +253,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             return;
         }
 
-        // Validar que las preguntas de opción única o múltiple tengan opciones
-        const preguntasConOpciones = document.querySelectorAll("#panelPreguntasContainer .form-group");
-        let errorOpciones = false;
-
-        preguntasConOpciones.forEach(pregunta => {
-            const selectTipo = pregunta.querySelector("select[name$='[tipo]']");
-            const opciones = pregunta.querySelectorAll("input[name$='[opciones][]']");
-
-            // Verificar si el select de tipo existe
-            if (selectTipo) {
-                const tipo = selectTipo.value;
-
-                // Si es opción única o múltiple, verificar que tenga opciones
-                if ((tipo === '3' || tipo === '4') && opciones.length === 0) {
-                    errorOpciones = true;
-                }
-            }
-        });
-
-        if (errorOpciones) {
-            mostrarAlerta("Error", "Las preguntas de opción única o múltiple deben tener al menos una opción.", "error");
-            return;
-        }
-
+        // Enviar formulario vía AJAX sin validación de opciones
         const formData = new FormData(form);
 
         fetch("guardar_encuesta.php", {
@@ -298,6 +275,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         });
     });
 });
+
+
     </script>
 </body>
 </html>
