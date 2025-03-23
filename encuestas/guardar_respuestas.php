@@ -63,7 +63,7 @@ try {
             ]);
         } elseif (!empty(trim($respuesta))) {
             // Pregunta de texto
-            $sql_texto = "INSERT INTO enc_respuestatexo (respuesta, idrespuestas, idpregunta) 
+            $sql_texto = "INSERT INTO enc_respuestatexto (respuesta, idrespuestas, idpregunta) 
                           VALUES (:respuesta, :idrespuestas, :idpregunta)";
             $stmt_texto = $pdo->prepare($sql_texto);
             $stmt_texto->execute([

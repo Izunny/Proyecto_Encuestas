@@ -37,7 +37,7 @@ $respuesta_opcion = "SELECT idopciones FROM enc_respuestaopcion INNER JOIN enc_p
 
 $respuesta_texto = "SELECT respuesta FROM enc_respuestatexto INNER JOIN enc_pregunta ON enc_respuestatexto.idpregunta=enc_pregunta.idpregunta WHERE idencuesta = $idEncuesta";
 
-$opciones = "SELECT opcion FROM enc_opcion INNER JOIN enc_respuestaopcion ON enc_opcion.idpregunta=enc_respuestaopcion.idpregunta";
+
 ?>
 
 <!DOCTYPE html>
@@ -115,7 +115,6 @@ $opciones = "SELECT opcion FROM enc_opcion INNER JOIN enc_respuestaopcion ON enc
                     <?php
                     $resultado_texto = mysqli_query($mysqli, $respuesta_texto);
                     $resultado_opcion = mysqli_query($mysqli, $respuesta_opcion);
-                    $opcion = mysqli_query($mysqli, $opciones);
 
                     if ($results = $mysqli->query($respuestas)) {
                         while ($rows = $results->fetch_assoc()){
@@ -129,9 +128,13 @@ $opciones = "SELECT opcion FROM enc_opcion INNER JOIN enc_respuestaopcion ON enc
                                         echo "<td>$salida</td>";
                                     } else {
                                         $fila = $resultado_opcion->fetch_assoc();
-                                        $opcionR = $opcion->fetch_assoc();
                                         $salida = $fila['idopciones'];
-                                        echo "<td>$salida</td>";
+                                        
+                                        $opcion = "SELECT opcion FROM enc_opcion WHERE idopciones=$salida";
+                                        $salida_opcion = mysqli_query($mysqli, $opcion);
+                                        $salida_texto = $salida_opcion->fetch_assoc();
+                                        $output_texto = $salida_texto['opcion'];
+                                        echo "<td>$output_texto</td>";
                                     }
                                     }
                                 }

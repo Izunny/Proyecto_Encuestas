@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $pdo->prepare("DELETE FROM enc_respuestaopcion WHERE idrespuestas IN (SELECT idrespuestas FROM enc_respuesta WHERE idencuesta = ?)")
             ->execute([$idEncuesta]);
 
-        $pdo->prepare("DELETE FROM enc_respuestatexo WHERE idrespuestas IN (SELECT idrespuestas FROM enc_respuesta WHERE idencuesta = ?)")
+        $pdo->prepare("DELETE FROM enc_respuestatexto WHERE idrespuestas IN (SELECT idrespuestas FROM enc_respuesta WHERE idencuesta = ?)")
             ->execute([$idEncuesta]);
 
         $pdo->prepare("DELETE FROM enc_respuesta WHERE idencuesta = ?")
