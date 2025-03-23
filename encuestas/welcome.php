@@ -25,6 +25,13 @@ $query = "SELECT * FROM enc_encuestasm INNER JOIN usuarios ON enc_encuestasm.idu
     <title>Bienvenida</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="./assets/css/style.css">
+    <style>
+        .disabled {
+            pointer-events: none;
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
 </head>
 <body>
 
@@ -39,9 +46,9 @@ $query = "SELECT * FROM enc_encuestasm INNER JOIN usuarios ON enc_encuestasm.idu
             <nav>
                 <ul class="nav-menu">
                     <li><a href="#" id="verResultados">Ver Resultados</a></li>
-                    <li><a href="#" id="responderEncuesta">Compartir encuesta</a></li>
+                    <li><a href="#" id="responderEncuesta" class="disabled">Compartir Encuesta</a></li>
                     <li><a href="#" id="editarEncuesta">Editar Encuesta</a></li>
-                    <li><a href="#" id="eliminarEncuesta">Eliminar Encuesta</a></li> <!-- ✅ ID corregido -->
+                    <li><a href="#" id="eliminarEncuesta">Eliminar Encuesta</a></li>
                 </ul>
             </nav>
                 
@@ -64,8 +71,14 @@ $query = "SELECT * FROM enc_encuestasm INNER JOIN usuarios ON enc_encuestasm.idu
                             $autor = $row["nombreU"];
                             $fecha = $row["fecha"];
                             $activo = $row["activo"];
+
                             echo "<tr>
-                                    <td><input type='radio' name='seleccionEncuesta' value='$idEncuesta' onclick='actualizarEnlaces($idEncuesta)'></td>
+                                    <td>
+                                        <input type='radio' name='seleccionEncuesta' 
+                                               value='$idEncuesta' 
+                                               data-estado='$activo' 
+                                               onclick='actualizarEnlaces($idEncuesta)'>
+                                    </td>
                                     <td>$nombre</td>
                                     <td>$descripcion</td>
                                     <td>$autor</td>
@@ -88,9 +101,22 @@ $query = "SELECT * FROM enc_encuestasm INNER JOIN usuarios ON enc_encuestasm.idu
 
     <script>
         function actualizarEnlaces(idEncuesta) {
+            const seleccionado = document.querySelector("input[name='seleccionEncuesta']:checked");
+            if (!seleccionado) return;
+
+            const estadoEncuesta = seleccionado.getAttribute("data-estado");
+            const compartirBtn = document.getElementById("responderEncuesta");
+
             document.getElementById("verResultados").href = "resultados.php?id=" + idEncuesta;
-            document.getElementById("responderEncuesta").href = "responder.php?id=" + idEncuesta;
             document.getElementById("editarEncuesta").href = "editar.php?id=" + idEncuesta;
+
+            if (estadoEncuesta === "N") {
+                compartirBtn.classList.add("disabled");
+                compartirBtn.removeAttribute("href"); // Quita el link si está inactiva
+            } else {
+                compartirBtn.classList.remove("disabled");
+                compartirBtn.href = "responder.php?id=" + idEncuesta; // Reactiva el link si está activa
+            }
         }
 
         document.getElementById("verResultados").addEventListener("click", function(event) {
@@ -108,10 +134,23 @@ $query = "SELECT * FROM enc_encuestasm INNER JOIN usuarios ON enc_encuestasm.idu
         });
 
         document.getElementById("responderEncuesta").addEventListener("click", function(event) {
-            if (!document.querySelector("input[name='seleccionEncuesta']:checked")) {
+            const seleccionado = document.querySelector("input[name='seleccionEncuesta']:checked");
+
+            if (!seleccionado) {
                 event.preventDefault();
-                mostrarAlerta("Error", "Por favor, selecciona una encuesta para responderla.", "error");
+                mostrarAlerta("Error", "Por favor, selecciona una encuesta.", "error");
+                return;
             }
+
+            const estadoEncuesta = seleccionado.getAttribute("data-estado");
+
+            if (estadoEncuesta === 'N') {
+                event.preventDefault();
+                mostrarAlerta("Error", "Esta encuesta está inactiva y no se puede compartir.", "error");
+                return;
+            }
+
+            window.location.href = "responder.php?id=" + seleccionado.value;
         });
 
         document.getElementById("eliminarEncuesta").addEventListener("click", function(event) {
@@ -124,7 +163,7 @@ $query = "SELECT * FROM enc_encuestasm INNER JOIN usuarios ON enc_encuestasm.idu
 
             const idEncuesta = seleccionado.value;
 
-            if (!confirm("¿Estás seguro de que quieres eliminar esta encuesta? Esta acción no se puede deshacer.")) {
+            if (!confirm("¿Estás seguro de que quieres eliminar esta encuesta? Esta acción no se puede deshacer y las respuestas serán eliminadas también.")) {
                 return;
             }
 

@@ -499,3 +499,9 @@ option {
 .custom-alert-content button:hover {
     background: #0056b3;
 }
+
+.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+    cursor: not-allowed;
+}

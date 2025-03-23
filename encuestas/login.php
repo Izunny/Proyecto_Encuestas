@@ -36,7 +36,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION["idusuario"] = $user["idusuario"];
                 $_SESSION["username"] = $user["username"];
 
-                // Redirigir al usuario a la página de bienvenida
+                // Si el usuario venía de una encuesta, redirigirlo de vuelta
+                if (!empty($_SESSION['redirect_url'])) {
+                    $redirect_url = $_SESSION['redirect_url'];
+                    unset($_SESSION['redirect_url']); // Limpiar la variable
+                    header("Location: $redirect_url");
+                    exit();
+                }
+
+                // Si no, redirigir a la página principal
                 header("location: welcome.php");
                 exit();
             } else {
@@ -67,7 +75,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </header>
 
 <div class="wrapper">
-    
     <div class="flex-wrapper login-items">
         <h2>Iniciar Sesión</h2>
     

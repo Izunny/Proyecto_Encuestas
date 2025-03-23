@@ -10,22 +10,26 @@ if (!$idEncuesta) {
     exit;
 }
 
+// guardar la URL 
+$_SESSION['redirect_url'] = "responder.php?id=" . $idEncuesta;
+
 $encuesta = [];
 $preguntas = [];
 
-// Obtener la encuesta
+// obtener la encuesta
 $sql = "SELECT * FROM enc_encuestasm WHERE idencuesta = :id";
 $stmt = $pdo->prepare($sql);
 $stmt->execute(['id' => $idEncuesta]);
 $encuesta = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Obtener preguntas
+
+// obtener preguntas
 $sql_preguntas = "SELECT * FROM enc_pregunta WHERE idencuesta = :id";
 $stmt_preguntas = $pdo->prepare($sql_preguntas);
 $stmt_preguntas->execute(['id' => $idEncuesta]);
 $preguntas = $stmt_preguntas->fetchAll(PDO::FETCH_ASSOC);
 
-// Obtener opciones
+// obtener opciones
 $nuevas_preguntas = [];
 foreach ($preguntas as $pregunta) {
     $sql_opciones = "SELECT * FROM enc_opcion WHERE idpregunta = :idpregunta";
@@ -40,6 +44,8 @@ foreach ($preguntas as $pregunta) {
 
 $preguntas = $nuevas_preguntas;
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="es">
@@ -66,45 +72,58 @@ $preguntas = $nuevas_preguntas;
                 <h2 class="card-title"><?php echo $encuesta['nombre'] ?? 'Encuesta'; ?></h2>
             </header>
             <div class="card-body">
-                <form id="formEncuesta">
-                    <input type="hidden" name="idencuesta" value="<?php echo $idEncuesta; ?>">
 
-                    <?php foreach ($preguntas as $pregunta): ?>
-                        <div class="form-group mt-3">
-                            <label><?php echo $pregunta['textopregunta']; ?></label>
-
-                            <?php if ($pregunta['idtipopregunta'] == 1): ?>
-                                <input type="text" name="respuestas[<?php echo $pregunta['idpregunta']; ?>]" class="form-control">
-                            
-                            <?php elseif ($pregunta['idtipopregunta'] == 2): ?>
-                                <textarea name="respuestas[<?php echo $pregunta['idpregunta']; ?>]" class="form-control"></textarea>
-                            
-                            <?php elseif ($pregunta['idtipopregunta'] == 3): ?>
-                                <?php foreach ($pregunta['opciones'] as $opcion): ?>
-                                    <div class="form-check">
-                                        <input type="radio" name="respuestas[<?php echo $pregunta['idpregunta']; ?>]" value="<?php echo $opcion['idopciones']; ?>" class="form-check-input">
-                                        <label class="form-check-label"><?php echo $opcion['opcion']; ?></label>
-                                    </div>
-                                <?php endforeach; ?>
-                            
-                            <?php elseif ($pregunta['idtipopregunta'] == 4): ?>
-                                <?php foreach ($pregunta['opciones'] as $opcion): ?>
-                                    <div class="form-check">
-                                        <input type="checkbox" name="respuestas[<?php echo $pregunta['idpregunta']; ?>][]" value="<?php echo $opcion['idopciones']; ?>" class="form-check-input">
-                                        <label class="form-check-label"><?php echo $opcion['opcion']; ?></label>
-                                    </div>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                        </div>
-                    <?php endforeach; ?>
-
-                    <div class="mt-4">
-                        <button type="submit" class="btn btn-primary">Enviar Respuestas</button>
-                        <button type="button" class="btn btn-default" onclick="window.location.href='welcome.php'">
-                            Cancelar <i class="fa fa-ban"></i>
-                        </button>
+                <?php if (!isset($_SESSION['idusuario'])): ?>
+                    <!-- usuario sin inicio -->
+                    <div class="alert alert-warning">
+                        <h4>¡Regístrate o inicia sesión para responder!</h4>
+                        <p>Para participar en la encuesta, debes estar registrado.</p>
+                        <a href="registro.php" class="btn btn-primary">Registrarse</a>
+                        <a href="login.php" class="btn btn-secondary">Iniciar sesión</a>
                     </div>
-                </form>
+                <?php else: ?>
+                    <!-- con usuario -->
+                    <form id="formEncuesta">
+                        <input type="hidden" name="idencuesta" value="<?php echo $idEncuesta; ?>">
+
+                        <?php foreach ($preguntas as $pregunta): ?>
+                            <div class="form-group mt-3">
+                                <label><?php echo $pregunta['textopregunta']; ?></label>
+
+                                <?php if ($pregunta['idtipopregunta'] == 1): ?>
+                                    <input type="text" name="respuestas[<?php echo $pregunta['idpregunta']; ?>]" class="form-control">
+                                
+                                <?php elseif ($pregunta['idtipopregunta'] == 2): ?>
+                                    <textarea name="respuestas[<?php echo $pregunta['idpregunta']; ?>]" class="form-control"></textarea>
+                                
+                                <?php elseif ($pregunta['idtipopregunta'] == 3): ?>
+                                    <?php foreach ($pregunta['opciones'] as $opcion): ?>
+                                        <div class="form-check">
+                                            <input type="radio" name="respuestas[<?php echo $pregunta['idpregunta']; ?>]" value="<?php echo $opcion['idopciones']; ?>" class="form-check-input">
+                                            <label class="form-check-label"><?php echo $opcion['opcion']; ?></label>
+                                        </div>
+                                    <?php endforeach; ?>
+                                
+                                <?php elseif ($pregunta['idtipopregunta'] == 4): ?>
+                                    <?php foreach ($pregunta['opciones'] as $opcion): ?>
+                                        <div class="form-check">
+                                            <input type="checkbox" name="respuestas[<?php echo $pregunta['idpregunta']; ?>][]" value="<?php echo $opcion['idopciones']; ?>" class="form-check-input">
+                                            <label class="form-check-label"><?php echo $opcion['opcion']; ?></label>
+                                        </div>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </div>
+                        <?php endforeach; ?>
+
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-primary">Enviar Respuestas</button>
+                            <button type="button" class="btn btn-default" onclick="window.location.href='welcome.php'">
+                                Cancelar <i class="fa fa-ban"></i>
+                            </button>
+                        </div>
+                    </form>
+                <?php endif; ?>
+
             </div>
         </section>
     </section>
@@ -112,31 +131,33 @@ $preguntas = $nuevas_preguntas;
     
 <?php include __DIR__ . "/includes/modal_alerta.php"; ?>
 
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/encuestas/assets/js/alertas.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    document.getElementById("formEncuesta").addEventListener("submit", function(event) {
-        event.preventDefault(); // Evita que el formulario recargue la página
+    const formEncuesta = document.getElementById("formEncuesta");
+    if (formEncuesta) {
+        formEncuesta.addEventListener("submit", function(event) {
+            event.preventDefault(); 
 
-        const formData = new FormData(this);
+            const formData = new FormData(this);
 
-        fetch("guardar_respuestas.php", {
-            method: "POST",
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            mostrarAlerta(
-                data.status === "success" ? "¡Éxito!" : "Error",
-                data.message,
-                data.status,
-                data.status === "success" ? "welcome.php" : null
-            );
-        })
-        .catch(error => console.error("Error:", error));
-    });
+            fetch("guardar_respuestas.php", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                mostrarAlerta(
+                    data.status === "success" ? "¡Éxito!" : "Error",
+                    data.message,
+                    data.status,
+                    data.status === "success" ? "welcome.php" : null
+                );
+            })
+            .catch(error => console.error("Error:", error));
+        });
+    }
 });
 </script>
 
