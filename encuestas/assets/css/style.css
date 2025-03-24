@@ -324,6 +324,10 @@ p.text {
     border-collapse: collapse;
 }
 
+.table-resultados{
+    border-collapse: collapse;
+}
+
 th, td{
     border: 4px solid #51369A;
     padding: 8px;
@@ -517,6 +521,20 @@ option {
     color: rgb(39, 39, 39);
 }
 
+.table-resultados { 
+    margin: auto; 
+    border-collapse: collapse; 
+}
+.table-resultados td, .table-resultados th { 
+    border: 2px solid #2c2347;
+    padding: 15px; 
+    text-align: center;
+    
+}
+.table-resultados th { 
+    background-color: #51369A; 
+    text-align: center;
+}
 
 .table-welcome { 
     width: 100%;
@@ -610,8 +628,20 @@ option {
     cursor: not-allowed;
 }
 
+<<<<<<< Updated upstream
 @media screen and (max-width: 600px) {
     .custom-alert-content {
         font-size: 14px;
     }
 }
+=======
+/* Preguntas con sus respuestas */
+.preguntas {
+    background-color: #003153;
+    width: 50%;
+    padding: 20px;
+    border: 1px solid grey;
+    margin: 10px;
+}
+
+>>>>>>> Stashed changes

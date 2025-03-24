@@ -31,22 +31,18 @@ $idrespuesta = "SELECT idrespuesta FROM enc_respuesta WHERE idencuesta = $idEncu
 // Consulta para obtener las preguntas
 $preguntas = "SELECT * FROM enc_pregunta WHERE idencuesta = $idEncuesta";
 
-$respuestas = "SELECT * FROM enc_respuesta WHERE idencuesta = $idEncuesta";
+// Array que se usara para mostrar todos los resultados
+$tabla = [];
 
-$respuesta_opcion = "SELECT idopciones FROM enc_respuestaopcion INNER JOIN enc_pregunta ON enc_respuestaopcion.idpregunta=enc_pregunta.idpregunta WHERE idencuesta = $idEncuesta";
-
-$respuesta_texto = "SELECT respuesta FROM enc_respuestatexto INNER JOIN enc_pregunta ON enc_respuestatexto.idpregunta=enc_pregunta.idpregunta WHERE idencuesta = $idEncuesta";
-
-$opciones = "SELECT opcion FROM enc_opcion INNER JOIN enc_respuestaopcion ON enc_opcion.idpregunta=enc_respuestaopcion.idpregunta";
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Bienvenida</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./assets/css/style.css">
     <style>
       
     </style>
@@ -71,6 +67,7 @@ $opciones = "SELECT opcion FROM enc_opcion INNER JOIN enc_respuestaopcion ON enc
                         <th>Estado</th>
                     </tr>
                     <?php
+                    // Loop para hacer una tabla con informacion de la encuesta
                     if ($result = $mysqli->query($query)) {
                         while ($row = $result->fetch_assoc()) {
                             $idEncuesta = $row["idencuesta"];
@@ -96,56 +93,65 @@ $opciones = "SELECT opcion FROM enc_opcion INNER JOIN enc_respuestaopcion ON enc
             </form>
 
             <br>
-
-            <form id="formSeleccionEncuesta">
-                <table class="table-welcome">
-                    <?php
-
-                    /* Primera fila de las preguntas */
-                    if ($result = $mysqli->query($preguntas)) {
-                        echo "<tr>";
-                        while ($row = $result->fetch_assoc()) {
-                            $textopregunta = $row["textopregunta"];
-                            echo "<th> $textopregunta </th>";
-                        }
-                        echo "</tr>";
-                    }
-                    ?>
-
-                    <?php
-                    $resultado_texto = mysqli_query($mysqli, $respuesta_texto);
-                    $resultado_opcion = mysqli_query($mysqli, $respuesta_opcion);
-                    $opcion = mysqli_query($mysqli, $opciones);
-
-                    if ($results = $mysqli->query($respuestas)) {
-                        while ($rows = $results->fetch_assoc()){
-                            if ($result = $mysqli->query($preguntas)) {
-                                echo "<tr>";
-                                while ($row = $result->fetch_assoc()) {
-                                    $tipo_pregunta = $row["idtipopregunta"];
-                                    if ($tipo_pregunta == "1" or $tipo_pregunta == "2"){
-                                        $fila = $resultado_texto->fetch_assoc();
-                                        $salida = $fila['respuesta'];
-                                        echo "<td>$salida</td>";
-                                    } else {
-                                        $fila = $resultado_opcion->fetch_assoc();
-                                        $opcionR = $opcion->fetch_assoc();
-                                        $salida = $fila['idopciones'];
-                                        echo "<td>$salida</td>";
-                                    }
-                                    }
-                                }
-                                echo "</tr>";
-                            }                       
-                        }
-                    ?>
-
-
-                </table>
-            </form>
+                
         </div>
 
+        <div class="wrap-welcome">
+    
+            <form id="formSeleccionEncuesta">
+                    
+                    <?php
+                    if ($result = $mysqli->query($preguntas)) {
+                        while ($row = $result->fetch_assoc()) {
+                            echo '<div class="preguntas">';
+                            $textopregunta = $row["textopregunta"];
+                            echo '<div style="font-weight: bold;">';
+                            echo $textopregunta;
+                            echo '</div>';
+                            $num_pregunta = $row["idpregunta"];
+                            $tipo_pregunta = $row["idtipopregunta"];
+                            $tabla[] = $textopregunta;
+                            echo "<br>";
+                            // Resultados de la pregunta actual si son tipo texto
+                            if ($tipo_pregunta == "1" or $tipo_pregunta == "2"){
+                                $resultados_texto = "SELECT respuesta FROM enc_respuestatexto WHERE idpregunta = $num_pregunta";
+                                if ($result1=$mysqli->query($resultados_texto)){
+                                    while ($row = $result1->fetch_assoc()){
+                                        $tabla[$textopregunta][]=$row["respuesta"];
+                                        $valor = $row["respuesta"];
+                                        echo "$valor<br>";
+                                    }
+                                }
+                            // Resultados de la pregunta actual si son tipo opcion
+                            } else {
+                                    $resultados_opcion = "SELECT idopciones FROM enc_respuestaopcion WHERE idpregunta = $num_pregunta";
+                                    if ($result2=$mysqli->query($resultados_opcion)){
+                                        while($row = $result2->fetch_assoc()){
+                                            $tabla[$textopregunta][]=$row["idopciones"];
+                                            $valor = $row["idopciones"];
+                                            // Consulta para las opciones dependiendo de las respuestas
+                                            $opcion_texto = "SELECT opcion FROM enc_opcion WHERE idopciones=$valor";
+                                            $result3 = $mysqli->query($opcion_texto);
+                                            while($valor_texto = $result3->fetch_assoc()){
+                                                $valor_final=$valor_texto["opcion"];
+                                            };
+                                            echo "$valor_final<br>";                                            
+                                        }
+                                    }
+                            }
+                            echo '</div>';
+                        }
+                        $result->free();
+                    }
+                    ?>
+                    <h1>hey</h1>                        
+                    <?php
+                        echo '<pre>'; print_r($tabla); echo '</pre>';
+                    ?>
+            </form>
+        </div>
     </div>
+
     <?php include __DIR__ . "/includes/modal_alerta.php"; ?>
 
 
