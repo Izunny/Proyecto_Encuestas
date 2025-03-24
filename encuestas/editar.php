@@ -82,11 +82,11 @@ $preguntas = $nuevas_preguntas; // Reemplazar el array original con el corregido
                     <input type="hidden" name="idencuesta" value="<?php echo $idEncuesta; ?>">
                     
                     <div class="row">
-                        <div class="form-group col-12 col-md-2">
+                        <div class="form-group col-12 col-md-4">
                             <label>Título:</label>
                             <input type="text" name="titulo" class="form-control" value="<?php echo $encuesta['nombre'] ?? ''; ?>" required>
                         </div>
-                        <div class="form-group col-12 col-md-3">
+                        <div class="form-group col-12 col-md-4">
                             <label>Descripción:</label>
                             <textarea name="descripcion" class="form-control" required><?php echo $encuesta['descripcion'] ?? ''; ?></textarea>
                         </div>

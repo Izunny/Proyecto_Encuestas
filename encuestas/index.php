@@ -39,7 +39,7 @@
                 amigos. ¡Convierte tus dudas en datos!
             </p>
 
-            <img class="home-img" src="imagenes/encuesta.jpg" alt="">
+            <img class="home-img1" src="imagenes/encuesta.jpg" alt="">
          
     </div>
 

@@ -81,30 +81,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <!-- Encabezado -->
     <?php include __DIR__ . "/includes/header.php"; ?>
 
-    <section class="container mt-5">
+    <section class="container mt-2">
         <section class="card">
             <header class="card-header bg-primary text-white">
                 <h2 class="card-title">Agregar Encuesta</h2>
             </header>
             <div class="card-body">
                 <form id="formAgregarEncuesta">
-                    <div class="row">
-                        <div class="form-group col-12 col-md-2">
+                    <div class="row align-items-end">
+                        <div class="form-group col-12 col-md-4 ">
                             <label>Título:</label>
                             <input type="text" name="titulo" class="form-control" required>
                         </div>
-                        <div class="form-group col-12 col-md-3">
+                        <div class="form-group col-12 col-md-4 ">
                             <label>Descripción:</label>
                             <textarea name="descripcion" class="form-control" required></textarea>
                         </div>
-                        <div class="form-group col-10 col-md-1">
+                        <div class="form-group col-12 col-md-1 ">
                             <label>Estado:</label><br>
-                            <select class="form-control1" name="estado">
+                            <select class="form-control1" name="estado" >
                                 <option value="S">Activo</option>
                                 <option value="N">Inactivo</option>
                             </select>
                         </div>
-                        <div class="form-group col-10 col-md-1">
+                        <div class="form-group col-12 col-md-1 ">
                             <label>Fecha:</label><br>
                             <div class="input-group">
                                 <input type="text" data-plugin-datepicker class="form-control" data-input-mask="31/12/9999" placeholder="DD/MM/AAAA" name="fecha" id="fecha" readonly>

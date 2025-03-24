@@ -78,7 +78,7 @@ $preguntas = $nuevas_preguntas;
                     <div class="alert alert-warning">
                         <h4>¡Regístrate o inicia sesión para responder!</h4>
                         <p>Para participar en la encuesta, debes estar registrado.</p>
-                        <a href="registro.php" class="btn btn-primary">Registrarse</a>
+                        <a href="register.php" class="btn btn-primary">Registrarse</a>
                         <a href="login.php" class="btn btn-secondary">Iniciar sesión</a>
                     </div>
                 <?php else: ?>

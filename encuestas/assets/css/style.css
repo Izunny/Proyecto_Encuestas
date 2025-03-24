@@ -17,13 +17,19 @@ html, body {
 }
 
 .container {
-    height: 95%;
-    min-height: 95vh; 
-    width: 95%; 
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
     padding: 3%;
 }
 
-
+@media screen and (max-width:768px) {
+    .container {
+        width: 105%;
+        display: flex;
+        align-items: center;
+    }
+  }
 
 
 /*HEADER STYLES*/
@@ -33,20 +39,16 @@ html, body {
     align-items: center;
     display: flex;
     flex-direction: row;
-    margin: 15px 200px;
     justify-content: space-between;
+    margin: 15px auto;
+    padding: 10px 20px;
+    max-width: 1200px;
 }
 
 .header_one {
     display: flex;
     align-items: center;
 }
-
-.header_one a {
-    padding: 10px;
-    text-decoration: none;
-}
-
 
 .logo {
     width: 50px;
@@ -56,6 +58,33 @@ html, body {
 .header_two {
     display: flex;
     align-items: center;
+}
+
+@media screen and (max-width: 768px) {
+    .header-container {
+        flex-direction: column;
+        text-align: center;
+        margin: 0;
+    }
+    
+    .header_one {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .logo {
+        width: 80px;
+    }
+
+    .header_two {
+       
+        margin-top: 10px;
+    }
+}
+
+.header_one a {
+    padding: 10px;
+    text-decoration: none;
 }
 
 .header_two a {
@@ -123,12 +152,44 @@ a:hover{
     color: #a89bff
 }
 
-.home-img{
-    width: 800px;
-    /* adds 12px border radius */
+.home-img, .register-img {
+    width: 100%;
+    max-width: 800px;
+    height: auto;
     border-radius: 12px;
     padding: 8px;
     background-color: rgb(3, 24, 33);
+    
+}
+
+.home-img1{
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+    border-radius: 12px;
+    padding: 8px;
+    background-color: rgb(3, 24, 33);
+}
+
+@media screen and (max-width: 768px) {
+    .home-img, .register-img {
+        display: none;
+        
+    }
+
+    .home-img1 {
+        max-width: 80%;
+       
+        
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .table-welcome {
+        display: block;
+        overflow-x: auto;
+        width: 100%;
+    }
 }
 
 .container-one{
@@ -141,6 +202,15 @@ a:hover{
 
 p.text {
     width: 700px;
+    
+}
+
+@media screen and (max-width: 600px) {
+    p.text {
+        display: flex;
+        overflow-x: auto;
+        width: 100%;
+    }
 }
 
 .cerrar_sesion {
@@ -167,21 +237,14 @@ p.text {
 .wrapper-register {
     display: flex;
     flex-direction: row;
-    margin: 0px 200px;
+    margin: 0px 90px;
 }
 
 .flex-wrapper{
     margin: 10px 20px;
 }
 
-.register-img{
-    width: 375px;
-    margin: 10px;
-    /* adds 12px border radius */
-    border-radius: 12px;
-    padding: 8px;
-    background-color: rgb(3, 24, 33);
-}
+
 
 .register-fields {
 	display: grid;
@@ -190,6 +253,17 @@ p.text {
 	gap: 0;
 	width: 100%;
 	height: 100%;
+}
+
+@media screen and (max-width: 600px) {
+    .register-fields {
+        display: flex;
+        width: 150%;
+        flex-direction: column;
+        align-content: center;
+        text-align: center;
+     
+    }
 }
 
 .grid1 {
@@ -286,7 +360,7 @@ th, td{
 
 /*diseño responsivo*/
 
-@media screen and (max-width:600px) {
+@media screen and (max-width:768px) {
     .column {
       width: 100%;
     }
@@ -300,8 +374,9 @@ th, td{
 
   /* Estilos para el formulario */
 .form-group {
-    margin: 0px 10px;
-    margin-bottom: 20px;
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
 }
 
 .form-control {
@@ -314,7 +389,7 @@ th, td{
 
 .form-control1 {
     width: 100%;
-    padding: 0.5rem;
+    padding: 7px;
     border: 1px solid #ccc;
     border-radius: 4px;
     
@@ -324,66 +399,73 @@ th, td{
 .row {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem; 
-    
+    gap: 10px; 
 }
 
 .col-12 {
-    flex: 1 1 100%; /* Ocupa el 100% del ancho en móviles */
-    padding-right: 1%;
+    flex: 1 1 100%; 
+    padding-right: 1; 
 }
 
+/* Ajustes para pantallas más grandes (≥ 768px) */
 @media screen and (min-width: 768px) {
-    .col-md-3 {
-        flex: 1 1 25%; /* Ocupa el 25% del ancho en tablets y desktop */
-    }
-    .col-md-5 {
-        flex: 1 1 50%; /* Ocupa el 50% del ancho en tablets y desktop */
-    }
-    .col-md-2 {
-        flex: 1 1 20%; /* Ocupa el 20% del ancho en tablets y desktop */
-    }
+    .col-md-4 { flex: 1 1 33.333%; } /* Ocupa 4 columnas en un sistema de 12 columnas */
+    .col-md-5 { flex: 1 1 41.666%; } /* Ocupa 5 columnas */
+    .col-md-1 { flex: 1 1 8.333%; }  /* Ocupa 1 columna */
+    .col-md-2 { flex: 1 1 16.666%; } /* Ocupa 2 columnas */
 }
 
 /* Estilos para las preguntas dinámicas */
 #panelPreguntasContainer {
     margin-top: 20px;
     background-color: rgba(88, 88, 88, 0.2);
-    border-radius: 20px;
+    border-radius: 10px;
     padding: 30px;
-    margin: 30px;
-    
-    
 }
 
 .opcion-item {
     display: flex;
-    gap: 20px;
-    margin-bottom: 20px;
-    padding-inline: 20px;
-   
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+@media screen and (max-width: 600px) {
+    .opcion-item {
+        flex-direction: column;
+        width: 100%;
+    }
 }
 
 /* Estilo del menú horizontal */
 .nav-menu {
-    list-style: none;
-    display: flex; /* Hace que los elementos estén en línea */
-    justify-content: center; /* Centra el menú horizontalmente */
-    background-color: #3b2579; /* Color de fondo */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    background-color: #3b2579;
     padding: 10px;
     border-radius: 5px;
+    list-style: none;
 }
 
 .nav-menu li {
-    margin: 0 15px; 
+    margin: 10px;
 }
 
 .nav-menu a {
-    text-decoration: none;
-    color: white; 
-    font-size: 18px;
-    font-weight: bold;
-    transition: color 0.3s ease-in-out;
+    font-size: 20px;
+    padding: 8px 12px;
+}
+
+@media screen and (max-width: 600px) {
+    .nav-menu {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .nav-menu a {
+        font-size: 18px;
+    }
 }
 
 .nav-menu a:hover {
@@ -393,13 +475,14 @@ th, td{
 
 
 textarea {
-    max-height: 15px; 
+    max-height: 16px; 
     color: rgb(39, 39, 39);
    
 }
 
-input-group{
-    max-height: 15px; 
+.input-group{
+    max-height: 34px; 
+
     
 }
 
@@ -417,6 +500,14 @@ button {
     
 }
 
+@media screen and (max-width: 600px) {
+    button, .copy-btn {
+        width: 100%;
+        font-size: 14px;
+        margin: 5px;
+    }
+}
+
 select {
     max-height: 34px; 
     color: rgb(39, 39, 39);
@@ -428,9 +519,10 @@ option {
 
 
 .table-welcome { 
-    width: 90%; 
-    margin: auto; 
-    border-collapse: collapse; 
+    width: 100%;
+    max-width: 1000px;
+    margin: auto;
+    border-collapse: collapse;
     
 }
 .table-welcome td, .table-welcome th { 
@@ -443,6 +535,16 @@ option {
     text-align: center;
 }
 
+@media screen and (max-width: 768px) {
+    .table-welcome {
+        font-size: 14px;
+    }
+
+    .table-welcome th, .table-welcome td {
+        padding: 10px;
+    }
+}
+
 .items-welcome {
     width: 100%;
     padding: 0.5rem 5rem;
@@ -452,6 +554,8 @@ option {
     width: 80%;
     padding: 0.5rem 5rem;
 }
+
+
 
 /* Estilos para la ventana emergente personalizada */
 .custom-alert {
@@ -504,4 +608,10 @@ option {
     pointer-events: none;
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+@media screen and (max-width: 600px) {
+    .custom-alert-content {
+        font-size: 14px;
+    }
 }
