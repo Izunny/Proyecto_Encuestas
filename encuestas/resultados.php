@@ -144,16 +144,16 @@ $tabla = [];
                         $result->free();
                     }
                     ?>
-                    <h1>hey</h1>                        
+                    <!-- Solo para pruebas
                     <?php
                         echo '<pre>'; print_r($tabla); echo '</pre>';
                     ?>
+                    -->
             </form>
         </div>
     </div>
 
     <?php include __DIR__ . "/includes/modal_alerta.php"; ?>
-
 
 </body>
 </html>

@@ -638,13 +638,11 @@ option {
     cursor: not-allowed;
 }
 
-<<<<<<< Updated upstream
 @media screen and (max-width: 600px) {
     .custom-alert-content {
         font-size: 14px;
     }
 }
-=======
 /* Preguntas con sus respuestas */
 .preguntas {
     background-color: #003153;
@@ -654,4 +652,3 @@ option {
     margin: 10px;
 }
 
->>>>>>> Stashed changes
