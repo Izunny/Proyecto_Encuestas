@@ -1,6 +1,6 @@
 <?php
 require 'config/database.php';
-session_start(); // Necesario para obtener el id del usuario
+session_start(); // necesario para obtener el id del usuario
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $titulo = $_POST['titulo'];
@@ -9,13 +9,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $estado = $_POST['estado'];
     $idusuario = $_SESSION['idusuario']; // ID del usuario que crea la encuesta
 
-    // Preguntas como arrays
+    // preguntas como arrays
     $preguntas = $_POST['preguntas'] ?? [];
 
     try {
         $pdo->beginTransaction();
 
-        // Insertar la encuesta en la tabla correcta: enc_encuestasm
+        // insertar la encuesta en la tabla correcta: enc_encuestasm
         $sql = "INSERT INTO enc_encuestasm (nombre, descripcion, fecha, activo, idusuario) 
                 VALUES (:titulo, :descripcion, STR_TO_DATE(:fecha, '%d/%m/%Y'), :estado, :idusuario)";
         $stmt = $pdo->prepare($sql);
@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         ]);
         $encuesta_id = $pdo->lastInsertId();
 
-        // Insertar las preguntas en la tabla correcta: enc_pregunta
+        // insertar las preguntas en la tabla correcta: enc_pregunta
         foreach ($preguntas as $pregunta) {
             $sql_pregunta = "INSERT INTO enc_pregunta (idencuesta, textopregunta, idtipopregunta, requerida) 
                              VALUES (:idencuesta, :textopregunta, :idtipopregunta, :requerida)";
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             $pregunta_id = $pdo->lastInsertId();
 
-            // Insertar opciones si el tipo de pregunta lo requiere en la tabla correcta: enc_opcion
+            // insertar opciones si el tipo de pregunta lo requiere en la tabla correcta: enc_opcion
             if (in_array($pregunta['tipo'], ['3', '4']) && !empty($pregunta['opciones'])) { // 3 = opción única, 4 = opción múltiple
                 foreach ($pregunta['opciones'] as $opcion) {
                     $sql_opcion = "INSERT INTO enc_opcion (idpregunta, opcion) VALUES (:idpregunta, :opcion)";
@@ -55,12 +55,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         }
 
-        // Confirmar la transacción
+        // confirmar la transacción
         $pdo->commit();
         echo json_encode(["status" => "success", "message" => "Encuesta agregada correctamente."]);
 
     } catch (Exception $e) {
-        // En caso de error, hacer rollback
+        // en caso de error, hacer rollback
         $pdo->rollBack();
         echo json_encode(["status" => "error", "message" => "Error al agregar la encuesta: " . $e->getMessage()]);
     }
@@ -190,7 +190,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                 </div>
                 <div id="opcionesPregunta${index}"></div>
-                <button type="button" class="btn btn-danger btn-sm mt-2" onclick="this.parentNode.remove()">Eliminar</button>
+                <button type="button" class="btn btn-danger btn-sm mt-2" onclick="this.parentNode.remove()">Eliminar Pregunta</button>
             `;
 
             container.appendChild(preguntaDiv);

@@ -38,10 +38,18 @@ $query = "SELECT * FROM enc_encuestasm INNER JOIN usuarios ON enc_encuestasm.idu
     <?php include __DIR__ . "/includes/header.php"; ?>
 
     <div class="items-welcome">
+    
+        <div class="row">
+        <div class="form-group col-12 col-md-9">
         <div class="wrap-welcome">
             <h3>Hola, <b><?php echo htmlspecialchars($_SESSION["username"]); ?></b>.</h3>
         </div>
-
+        </div>
+            <div class="form-group col-12 col-md-2">
+                <input type="text" id="buscarEncuesta" class="form-control" placeholder="Buscar encuesta...">
+            </div>
+        </div>
+    </div>
         <div class="wrap-welcome">
             <nav>
                 <ul class="nav-menu">
@@ -51,44 +59,48 @@ $query = "SELECT * FROM enc_encuestasm INNER JOIN usuarios ON enc_encuestasm.idu
                     <li><a href="#" id="eliminarEncuesta">Eliminar Encuesta</a></li>
                 </ul>
             </nav>
-                
+
             <form id="formSeleccionEncuesta">
                 <table class="table-welcome">
-                    <tr>
-                        <th>Seleccionar</th>
-                        <th>Título</th>
-                        <th>Descripción</th>
-                        <th>Autor</th>
-                        <th>Fecha</th>
-                        <th>Estado</th>
-                    </tr>
-                    <?php
-                    if ($result = $mysqli->query($query)) {
-                        while ($row = $result->fetch_assoc()) {
-                            $idEncuesta = $row["idencuesta"];
-                            $nombre = $row["nombre"];
-                            $descripcion = $row["descripcion"];
-                            $autor = $row["nombreU"];
-                            $fecha = $row["fecha"];
-                            $activo = $row["activo"];
+                    <thead>
+                        <tr>
+                            <th>Seleccionar</th>
+                            <th>Título</th>
+                            <th>Descripción</th>
+                            <th>Autor</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaEncuestas">
+                        <?php
+                        if ($result = $mysqli->query($query)) {
+                            while ($row = $result->fetch_assoc()) {
+                                $idEncuesta = $row["idencuesta"];
+                                $nombre = $row["nombre"];
+                                $descripcion = $row["descripcion"];
+                                $autor = $row["nombreU"];
+                                $fecha = $row["fecha"];
+                                $activo = $row["activo"];
 
-                            echo "<tr>
-                                    <td>
-                                        <input type='radio' name='seleccionEncuesta' 
-                                               value='$idEncuesta' 
-                                               data-estado='$activo' 
-                                               onclick='actualizarEnlaces($idEncuesta)'>
-                                    </td>
-                                    <td>$nombre</td>
-                                    <td>$descripcion</td>
-                                    <td>$autor</td>
-                                    <td>$fecha</td>
-                                    <td>" . ($activo == 'S' ? 'Activo' : 'Inactivo') . "</td>
-                                  </tr>";
+                                echo "<tr>
+                                        <td>
+                                            <input type='radio' name='seleccionEncuesta' 
+                                                   value='$idEncuesta' 
+                                                   data-estado='$activo' 
+                                                   onclick='actualizarEnlaces($idEncuesta)'>
+                                        </td>
+                                        <td>$nombre</td>
+                                        <td>$descripcion</td>
+                                        <td>$autor</td>
+                                        <td>$fecha</td>
+                                        <td>" . ($activo == 'S' ? 'Activo' : 'Inactivo') . "</td>
+                                      </tr>";
+                            }
+                            $result->free();
                         }
-                        $result->free();
-                    }
-                    ?>
+                        ?>
+                    </tbody>
                 </table>
             </form>
         </div>
@@ -112,12 +124,22 @@ $query = "SELECT * FROM enc_encuestasm INNER JOIN usuarios ON enc_encuestasm.idu
 
             if (estadoEncuesta === "N") {
                 compartirBtn.classList.add("disabled");
-                compartirBtn.removeAttribute("href"); // Quita el link si está inactiva
+                compartirBtn.removeAttribute("href");
             } else {
                 compartirBtn.classList.remove("disabled");
-                compartirBtn.href = "responder.php?id=" + idEncuesta; // Reactiva el link si está activa
+                compartirBtn.href = "responder.php?id=" + idEncuesta;
             }
         }
+
+        // filtro de busqueda
+        document.getElementById("buscarEncuesta").addEventListener("input", function() {
+            const filtro = this.value.toLowerCase();
+            document.querySelectorAll("#tablaEncuestas tr").forEach(row => {
+                const texto = row.innerText.toLowerCase();
+                row.style.display = texto.includes(filtro) ? "" : "none";
+            });
+        });
+
 
         document.getElementById("verResultados").addEventListener("click", function(event) {
             if (!document.querySelector("input[name='seleccionEncuesta']:checked")) {
@@ -151,40 +173,6 @@ $query = "SELECT * FROM enc_encuestasm INNER JOIN usuarios ON enc_encuestasm.idu
             }
 
             window.location.href = "responder.php?id=" + seleccionado.value;
-        });
-
-        document.getElementById("eliminarEncuesta").addEventListener("click", function(event) {
-            const seleccionado = document.querySelector("input[name='seleccionEncuesta']:checked");
-
-            if (!seleccionado) {
-                mostrarAlerta("Error", "Por favor, selecciona una encuesta para eliminar.", "error");
-                return;
-            }
-
-            const idEncuesta = seleccionado.value;
-
-            if (!confirm("¿Estás seguro de que quieres eliminar esta encuesta? Esta acción no se puede deshacer y las respuestas serán eliminadas también.")) {
-                return;
-            }
-
-            fetch("eliminar_encuesta.php", {
-                method: "POST",
-                body: new URLSearchParams({ idEncuesta: idEncuesta }),
-                headers: { "Content-Type": "application/x-www-form-urlencoded" }
-            })
-            .then(response => response.json())
-            .then(data => {
-                mostrarAlerta(
-                    data.status === "success" ? "¡Éxito!" : "Error",
-                    data.message,
-                    data.status,
-                    data.status === "success" ? "welcome.php" : null
-                );
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                mostrarAlerta("Error", "Hubo un problema al eliminar la encuesta.", "error");
-            });
         });
     </script>
 

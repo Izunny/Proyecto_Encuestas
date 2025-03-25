@@ -141,7 +141,7 @@ $preguntas = $nuevas_preguntas; // Reemplazar el array original con el corregido
                                             <?php endforeach; ?>
                                         <?php endif; ?>
                                     </div>
-                                    <button type="button" class="btn btn-danger btn-sm mt-2" onclick="this.parentNode.remove()">Eliminar</button>
+                                    <button type="button" class="btn btn-danger btn-sm mt-2" onclick="this.parentNode.remove()">Eliminar Pregunta</button>
                                 </div>
                             <?php endforeach; ?>
                         </div>
@@ -208,7 +208,7 @@ $preguntas = $nuevas_preguntas; // Reemplazar el array original con el corregido
                     </div>
                 </div>
                 <div id="opcionesPregunta${index}"></div>
-                <button type="button" class="btn btn-danger btn-sm mt-2" onclick="this.parentNode.remove()">Eliminar</button>
+                <button type="button" class="btn btn-danger btn-sm mt-2" onclick="this.parentNode.remove()">Eliminar Pregunta</button>
             `;
 
             container.appendChild(preguntaDiv);
