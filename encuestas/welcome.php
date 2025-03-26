@@ -15,7 +15,19 @@ if ($mysqli->connect_error) {
     die("Error de conexión: " . $mysqli->connect_error);
 }
 
-$query = "SELECT * FROM enc_encuestasm INNER JOIN usuarios ON enc_encuestasm.idusuario=usuarios.idusuario ORDER BY idencuesta ASC";
+$idUsuario = $_SESSION["idusuario"]; 
+
+// Filtrar 
+$query = "SELECT * FROM enc_encuestasm 
+          INNER JOIN usuarios ON enc_encuestasm.idusuario = usuarios.idusuario 
+          WHERE enc_encuestasm.idusuario = ? 
+          ORDER BY idencuesta ASC";
+
+$stmt = $mysqli->prepare($query);
+$stmt->bind_param("i", $idUsuario);
+$stmt->execute();
+$result = $stmt->get_result();
+
 ?>
 
 <!DOCTYPE html>
@@ -70,37 +82,50 @@ $query = "SELECT * FROM enc_encuestasm INNER JOIN usuarios ON enc_encuestasm.idu
                             <th>Autor</th>
                             <th>Fecha</th>
                             <th>Estado</th>
+                            <th>Descargar</th>
                         </tr>
                     </thead>
                     <tbody id="tablaEncuestas">
-                        <?php
-                        if ($result = $mysqli->query($query)) {
-                            while ($row = $result->fetch_assoc()) {
-                                $idEncuesta = $row["idencuesta"];
-                                $nombre = $row["nombre"];
-                                $descripcion = $row["descripcion"];
-                                $autor = $row["nombreU"];
-                                $fecha = $row["fecha"];
-                                $activo = $row["activo"];
+    <?php
+    if ($result) {
+        while ($row = $result->fetch_assoc()) {
+            $idEncuesta = $row["idencuesta"];
+            $nombre = $row["nombre"];
+            $descripcion = $row["descripcion"];
+            $autor = $row["nombreU"];
+            $fecha = $row["fecha"];
+            $activo = $row["activo"];
 
-                                echo "<tr>
-                                        <td>
-                                            <input type='radio' name='seleccionEncuesta' 
-                                                   value='$idEncuesta' 
-                                                   data-estado='$activo' 
-                                                   onclick='actualizarEnlaces($idEncuesta)'>
-                                        </td>
-                                        <td>$nombre</td>
-                                        <td>$descripcion</td>
-                                        <td>$autor</td>
-                                        <td>$fecha</td>
-                                        <td>" . ($activo == 'S' ? 'Activo' : 'Inactivo') . "</td>
-                                      </tr>";
-                            }
-                            $result->free();
-                        }
-                        ?>
-                    </tbody>
+            echo "<tr>
+                    <td>
+                        <input type='radio' name='seleccionEncuesta' 
+                               value='$idEncuesta' 
+                               data-estado='$activo' 
+                               onclick='actualizarEnlaces($idEncuesta)'>
+                    </td>
+                    <td>$nombre</td>
+                    <td>$descripcion</td>
+                    <td>$autor</td>
+                    <td>$fecha</td>
+                    <td>
+                        <button class='btn btn-sm " . ($activo == 'S' ? 'btn-success' : 'btn-danger') . "' 
+                                onclick='cambiarEstado($idEncuesta, \"" . ($activo == 'S' ? 'N' : 'S') . "\")'>
+                            " . ($activo == 'S' ? 'Activo' : 'Inactivo') . "
+                        </button>
+                    </td>
+                     <td>
+                        <button>
+                        Descargar
+                        </button>
+                    </td>
+
+                </tr>";
+        }
+        $result->free();
+    }
+    ?>
+</tbody>
+
                 </table>
             </form>
         </div>
@@ -174,7 +199,59 @@ $query = "SELECT * FROM enc_encuestasm INNER JOIN usuarios ON enc_encuestasm.idu
 
             window.location.href = "responder.php?id=" + seleccionado.value;
         });
-    </script>
 
+        document.getElementById("eliminarEncuesta").addEventListener("click", function(event) {
+            const seleccionado = document.querySelector("input[name='seleccionEncuesta']:checked");
+
+            if (!seleccionado) {
+                mostrarAlerta("Error", "Por favor, selecciona una encuesta para eliminar.", "error");
+                return;
+            }
+
+            const idEncuesta = seleccionado.value;
+
+            if (!confirm("¿Estás seguro de que quieres eliminar esta encuesta? Esta acción no se puede deshacer y las respuestas serán eliminadas también.")) {
+                return;
+            }
+
+            fetch("eliminar_encuesta.php", {
+                method: "POST",
+                body: new URLSearchParams({ idEncuesta: idEncuesta }),
+                headers: { "Content-Type": "application/x-www-form-urlencoded" }
+            })
+            .then(response => response.json())
+            .then(data => {
+                mostrarAlerta(
+                    data.status === "success" ? "¡Éxito!" : "Error",
+                    data.message,
+                    data.status,
+                    data.status === "success" ? "welcome.php" : null
+                );
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                mostrarAlerta("Error", "Hubo un problema al eliminar la encuesta.", "error");
+            });
+        });
+
+        function cambiarEstado(idEncuesta, nuevoEstado) {
+            fetch("cambiar_estado.php", {
+                method: "POST",
+                body: new URLSearchParams({ idEncuesta: idEncuesta, estado: nuevoEstado }),
+                headers: { "Content-Type": "application/x-www-form-urlencoded" }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    location.reload(); // Recarga la página para reflejar cambios
+                } else {
+                    alert("Error al actualizar estado: " + data.message);
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+
+
+    </script>
 </body>
 </html>
