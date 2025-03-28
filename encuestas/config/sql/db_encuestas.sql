@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 23-03-2025 a las 18:15:54
+-- Tiempo de generación: 28-03-2025 a las 07:51:38
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -42,7 +42,8 @@ CREATE TABLE `enc_encuestasm` (
 
 INSERT INTO `enc_encuestasm` (`idencuesta`, `nombre`, `descripcion`, `idusuario`, `fecha`, `activo`) VALUES
 (4, 'Partidos politicos', 'Preferencia de partidos politicos', 2, '2025-03-23', 'S'),
-(5, 'Lenguajes de programación', 'Preferencias de Lenguajes de Programacion', 2, '2025-03-23', 'S');
+(5, 'Lenguajes de programación', 'Preferencias de Lenguajes de Programacion', 2, '2025-03-23', 'S'),
+(6, 'Frutas', 'Preferencias de frutas', 2, '2025-03-27', 'S');
 
 -- --------------------------------------------------------
 
@@ -71,7 +72,12 @@ INSERT INTO `enc_opcion` (`idopciones`, `idpregunta`, `opcion`) VALUES
 (17, 12, 'Si'),
 (18, 12, 'No'),
 (19, 15, 'Si'),
-(20, 15, 'No');
+(20, 15, 'No'),
+(21, 17, 'Mango'),
+(22, 17, 'Fresa'),
+(23, 17, 'Kiwi'),
+(24, 18, 'Platano'),
+(25, 18, 'Sandia');
 
 -- --------------------------------------------------------
 
@@ -99,7 +105,10 @@ INSERT INTO `enc_pregunta` (`idpregunta`, `idencuesta`, `textopregunta`, `requer
 (12, 4, 'Te gustaria entrar en un partido politico?', '0', 3),
 (13, 5, 'Cual es tu lenguaje de programacion favorito?', '0', 1),
 (14, 5, 'Que te ha gustado de PHP?', '0', 1),
-(15, 5, 'Te gusta PHP?', '0', 3);
+(15, 5, 'Te gusta PHP?', '0', 3),
+(16, 6, 'Porque te gusta la fruta?', '0', 1),
+(17, 6, 'Cuales de estas frutas has probado?', '0', 4),
+(18, 6, 'Cual de estas frutas prefieres?', '0', 3);
 
 -- --------------------------------------------------------
 
@@ -127,7 +136,13 @@ INSERT INTO `enc_respuesta` (`idrespuestas`, `idencuesta`, `idusuario`, `fecha`)
 (16, 5, 2, '2025-03-23'),
 (17, 5, 2, '2025-03-23'),
 (18, 5, 2, '2025-03-23'),
-(19, 5, 2, '2025-03-23');
+(19, 5, 2, '2025-03-23'),
+(20, 4, 2, '2025-03-27'),
+(21, 4, 2, '2025-03-27'),
+(22, 4, 2, '2025-03-27'),
+(23, 4, 2, '2025-03-27'),
+(24, 4, 1, '2025-03-27'),
+(25, 6, 2, '2025-03-27');
 
 -- --------------------------------------------------------
 
@@ -170,7 +185,37 @@ INSERT INTO `enc_respuestaopcion` (`idrespuestaopcion`, `idopciones`, `idrespues
 (47, 19, 16, 15),
 (48, 20, 17, 15),
 (49, 20, 18, 15),
-(50, 19, 19, 15);
+(50, 19, 19, 15),
+(51, 10, 20, 8),
+(52, 11, 20, 8),
+(53, 12, 20, 8),
+(54, 13, 20, 9),
+(55, 15, 20, 11),
+(56, 17, 20, 12),
+(57, 10, 21, 8),
+(58, 11, 21, 8),
+(59, 12, 21, 8),
+(60, 14, 21, 9),
+(61, 16, 21, 11),
+(62, 18, 21, 12),
+(63, 10, 22, 8),
+(64, 11, 22, 8),
+(65, 12, 22, 8),
+(66, 13, 22, 9),
+(67, 15, 22, 11),
+(68, 17, 22, 12),
+(69, 10, 23, 8),
+(70, 12, 23, 8),
+(71, 14, 23, 9),
+(72, 15, 23, 11),
+(73, 18, 23, 12),
+(74, 11, 24, 8),
+(75, 14, 24, 9),
+(76, 16, 24, 11),
+(77, 18, 24, 12),
+(78, 21, 25, 17),
+(79, 23, 25, 17),
+(80, 24, 25, 18);
 
 -- --------------------------------------------------------
 
@@ -202,7 +247,13 @@ INSERT INTO `enc_respuestatexto` (`idrespuestatexo`, `respuesta`, `idrespuestas`
 (13, 'Python', 18, 13),
 (14, 'No me gusta', 18, 14),
 (15, 'C++', 19, 13),
-(16, 'Sus funciones para paginas web', 19, 14);
+(16, 'Sus funciones para paginas web', 19, 14),
+(17, 'Meter al partido a Adame', 20, 10),
+(18, 'Bajar la jornada', 21, 10),
+(19, 'Hola', 22, 10),
+(20, 'Que todos se hagan millonarios', 23, 10),
+(21, 'Que le bajen el precio de la coca (el refresco)', 24, 10),
+(22, 'Porque si', 25, 16);
 
 -- --------------------------------------------------------
 
@@ -325,37 +376,37 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `enc_encuestasm`
 --
 ALTER TABLE `enc_encuestasm`
-  MODIFY `idencuesta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `idencuesta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `enc_opcion`
 --
 ALTER TABLE `enc_opcion`
-  MODIFY `idopciones` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `idopciones` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT de la tabla `enc_pregunta`
 --
 ALTER TABLE `enc_pregunta`
-  MODIFY `idpregunta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `idpregunta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `enc_respuesta`
 --
 ALTER TABLE `enc_respuesta`
-  MODIFY `idrespuestas` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `idrespuestas` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT de la tabla `enc_respuestaopcion`
 --
 ALTER TABLE `enc_respuestaopcion`
-  MODIFY `idrespuestaopcion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `idrespuestaopcion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
 
 --
 -- AUTO_INCREMENT de la tabla `enc_respuestatexto`
 --
 ALTER TABLE `enc_respuestatexto`
-  MODIFY `idrespuestatexo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `idrespuestatexo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT de la tabla `enc_tipopreguntacatalogo`
