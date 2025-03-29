@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 28-03-2025 a las 07:51:38
+-- Tiempo de generación: 29-03-2025 a las 06:16:30
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -43,7 +43,8 @@ CREATE TABLE `enc_encuestasm` (
 INSERT INTO `enc_encuestasm` (`idencuesta`, `nombre`, `descripcion`, `idusuario`, `fecha`, `activo`) VALUES
 (4, 'Partidos politicos', 'Preferencia de partidos politicos', 2, '2025-03-23', 'S'),
 (5, 'Lenguajes de programación', 'Preferencias de Lenguajes de Programacion', 2, '2025-03-23', 'S'),
-(6, 'Frutas', 'Preferencias de frutas', 2, '2025-03-27', 'S');
+(6, 'Frutas', 'Preferencias de frutas', 2, '2025-03-27', 'S'),
+(7, 'Comparación de métodos educativos', 'El propósito de esta encuesta es recopilar información sobre las experiencias y opiniones de los estudiantes respecto a la educación en línea y la educación tradicional.\r\nLos datos de la encuesta no seran compartidos de forma específica, serán analizados ', 1, '2025-03-28', 'S');
 
 -- --------------------------------------------------------
 
@@ -77,7 +78,43 @@ INSERT INTO `enc_opcion` (`idopciones`, `idpregunta`, `opcion`) VALUES
 (22, 17, 'Fresa'),
 (23, 17, 'Kiwi'),
 (24, 18, 'Platano'),
-(25, 18, 'Sandia');
+(25, 18, 'Sandia'),
+(26, 19, '18 años a 24 años'),
+(27, 19, '25 años a 34 años'),
+(28, 19, '35 Años A 44 Años'),
+(29, 19, '45 años a 54 años'),
+(30, 19, 'Más de 54 años'),
+(31, 20, 'Masculino'),
+(32, 20, 'Femenino'),
+(33, 20, 'Prefiero no decir'),
+(34, 21, 'Licenciatura'),
+(35, 21, 'Maestría'),
+(36, 21, 'Doctorado'),
+(37, 22, 'Estudiante'),
+(38, 22, 'Docente'),
+(39, 22, 'Ambas'),
+(40, 24, 'Si'),
+(41, 24, 'No'),
+(42, 25, 'Escolarizada'),
+(43, 25, 'No escolarizada'),
+(44, 25, 'Mixta'),
+(45, 26, 'Si'),
+(46, 26, 'No'),
+(47, 27, '1 Totalmente en desacuerdo'),
+(48, 27, '2'),
+(49, 27, '3'),
+(50, 27, '4'),
+(51, 27, '5 Totalmente de acuerdo'),
+(52, 28, '1 Nada importante / No es necesario'),
+(53, 28, '2'),
+(54, 28, '3'),
+(55, 28, '4'),
+(56, 28, '5 Indispensable'),
+(57, 29, '1 Totalmente incapaces '),
+(58, 29, '2'),
+(59, 29, '3'),
+(60, 29, '4'),
+(61, 29, '5 Totalmente competentes');
 
 -- --------------------------------------------------------
 
@@ -108,7 +145,20 @@ INSERT INTO `enc_pregunta` (`idpregunta`, `idencuesta`, `textopregunta`, `requer
 (15, 5, 'Te gusta PHP?', '0', 3),
 (16, 6, 'Porque te gusta la fruta?', '0', 1),
 (17, 6, 'Cuales de estas frutas has probado?', '0', 4),
-(18, 6, 'Cual de estas frutas prefieres?', '0', 3);
+(18, 6, 'Cual de estas frutas prefieres?', '0', 3),
+(19, 7, '¿Cuántos años tienes?', '0', 3),
+(20, 7, 'Sexo', '0', 3),
+(21, 7, 'Nivel de estudios', '0', 3),
+(22, 7, 'Actualmente,  ¿Eres estudiante o docente?', '0', 3),
+(23, 7, '¿Que licenciatura estudiaste o estas estudiando?', '0', 1),
+(24, 7, '¿Has estudiado en un plan de estudios con una modalidad no escolarizada? ', '0', 3),
+(25, 7, '¿Qué modalidad de aprendizaje educativa prefieres?', '0', 3),
+(26, 7, 'Prefieres (o preferirías en el caso de que nunca lo hayas experimentado) un trabajo en línea (home office) sobre un trabajo presencial', '0', 3),
+(27, 7, '¿Que tan acuerdo estás con esta afirmación? \"Se aprende mejor estudiando en una modalidad no escolarizada o cursos en línea.\"', '0', 3),
+(28, 7, '¿Qué tan importante es para ti tener a un docente o tutor (presencial) atendiéndote para resolver tus dudas?', '0', 3),
+(29, 7, 'Actualmente los docentes son competentes para enseñar de manera profesional en clases en línea (utilización de programas para hacer sesiones grupales, presentar diapositivas, pizarra en línea, organización de contenido en plataformas, organizar e informar', '0', 3),
+(30, 7, '¿Qué cambiarías en el enfoque de enseñanza en la modalidad escolarizada?', '0', 1),
+(31, 7, '¿Qué cosas no te han gustado al estudiar en línea (sesiones, presentación, tareas, retroalimentación del docente, etc.)?', '0', 1);
 
 -- --------------------------------------------------------
 
@@ -142,7 +192,16 @@ INSERT INTO `enc_respuesta` (`idrespuestas`, `idencuesta`, `idusuario`, `fecha`)
 (22, 4, 2, '2025-03-27'),
 (23, 4, 2, '2025-03-27'),
 (24, 4, 1, '2025-03-27'),
-(25, 6, 2, '2025-03-27');
+(25, 6, 2, '2025-03-27'),
+(26, 6, 1, '2025-03-27'),
+(27, 7, 1, '2025-03-28'),
+(28, 7, 1, '2025-03-28'),
+(29, 7, 1, '2025-03-28'),
+(30, 7, 1, '2025-03-28'),
+(31, 7, 2, '2025-03-28'),
+(32, 7, 2, '2025-03-28'),
+(33, 7, 2, '2025-03-28'),
+(34, 7, 2, '2025-03-28');
 
 -- --------------------------------------------------------
 
@@ -215,7 +274,80 @@ INSERT INTO `enc_respuestaopcion` (`idrespuestaopcion`, `idopciones`, `idrespues
 (77, 18, 24, 12),
 (78, 21, 25, 17),
 (79, 23, 25, 17),
-(80, 24, 25, 18);
+(80, 24, 25, 18),
+(81, 21, 26, 17),
+(82, 22, 26, 17),
+(83, 24, 26, 18),
+(84, 26, 27, 19),
+(85, 31, 27, 20),
+(86, 34, 27, 21),
+(87, 38, 27, 22),
+(88, 40, 27, 24),
+(89, 43, 27, 25),
+(90, 46, 27, 26),
+(91, 49, 27, 27),
+(92, 53, 27, 28),
+(93, 58, 27, 29),
+(94, 27, 28, 19),
+(95, 32, 28, 20),
+(96, 35, 28, 21),
+(97, 37, 28, 22),
+(98, 41, 28, 24),
+(99, 42, 28, 25),
+(100, 46, 28, 26),
+(101, 48, 28, 27),
+(102, 55, 28, 28),
+(103, 58, 28, 29),
+(104, 27, 30, 19),
+(105, 32, 30, 20),
+(106, 35, 30, 21),
+(107, 38, 30, 22),
+(108, 41, 30, 24),
+(109, 42, 30, 25),
+(110, 45, 30, 26),
+(111, 48, 30, 27),
+(112, 54, 30, 28),
+(113, 58, 30, 29),
+(114, 26, 31, 19),
+(115, 33, 31, 20),
+(116, 35, 31, 21),
+(117, 37, 31, 22),
+(118, 41, 31, 24),
+(119, 44, 31, 25),
+(120, 46, 31, 26),
+(121, 48, 31, 27),
+(122, 55, 31, 28),
+(123, 58, 31, 29),
+(124, 28, 32, 19),
+(125, 31, 32, 20),
+(126, 34, 32, 21),
+(127, 37, 32, 22),
+(128, 41, 32, 24),
+(129, 43, 32, 25),
+(130, 45, 32, 26),
+(131, 48, 32, 27),
+(132, 53, 32, 28),
+(133, 60, 32, 29),
+(134, 27, 33, 19),
+(135, 31, 33, 20),
+(136, 35, 33, 21),
+(137, 37, 33, 22),
+(138, 40, 33, 24),
+(139, 43, 33, 25),
+(140, 46, 33, 26),
+(141, 48, 33, 27),
+(142, 54, 33, 28),
+(143, 59, 33, 29),
+(144, 27, 34, 19),
+(145, 32, 34, 20),
+(146, 35, 34, 21),
+(147, 37, 34, 22),
+(148, 41, 34, 24),
+(149, 42, 34, 25),
+(150, 46, 34, 26),
+(151, 51, 34, 27),
+(152, 53, 34, 28),
+(153, 59, 34, 29);
 
 -- --------------------------------------------------------
 
@@ -253,7 +385,31 @@ INSERT INTO `enc_respuestatexto` (`idrespuestatexo`, `respuesta`, `idrespuestas`
 (19, 'Hola', 22, 10),
 (20, 'Que todos se hagan millonarios', 23, 10),
 (21, 'Que le bajen el precio de la coca (el refresco)', 24, 10),
-(22, 'Porque si', 25, 16);
+(22, 'Porque si', 25, 16),
+(23, 'Porque estan buenas', 26, 16),
+(24, 'Software', 27, 23),
+(25, 'La personalización del aprendizaje ya que cada estudiante aprende a su ritmo y tiene intereses distintos', 27, 30),
+(26, 'Que en varias ocasiones padres de familia se han quejado de que no es lo mismo estudiar en linea que estudiar de forma presencial en las instalaciones escolares', 27, 31),
+(27, 'Psicologia', 28, 23),
+(28, 'Usar más tiempo para poner en práctica el conocimiento y utilizar plataformas como una herramienta adicional de enseñanza', 28, 30),
+(29, 'Que te dan obliguen a asistir a las sesiones. Deberias poder pasar la materia cumpliendo los trabajos y proyectos.', 28, 31),
+(30, 'Que sea híbrida', 29, 30),
+(31, 'Que no todos los maestros son capaces de adaptarse', 29, 31),
+(32, 'Ingenieria civil', 30, 23),
+(33, 'Si', 30, 30),
+(34, 'Que hablen todos al mismo tiempo y no escuchar ala primera', 30, 31),
+(35, 'Filosofia', 31, 23),
+(36, 'La presencia o acudir por Interes', 31, 30),
+(37, 'Más seguimiento, realizar micro actividades', 31, 31),
+(38, 'Derecho', 32, 23),
+(39, 'El uso de material didáctico actualizado', 32, 30),
+(40, 'Algunos docentes no organizan bien el contenido en la plataforma.', 32, 31),
+(41, 'Odontologia', 33, 23),
+(42, 'Esta bien creo la forma actual esta bien', 33, 30),
+(43, 'Que te exijan estar con la webcam prendida.', 33, 31),
+(44, 'Administracion', 34, 23),
+(45, 'No tengo problema con ninguno', 34, 30),
+(46, 'Hay profes que hablan demasiado y se desvian, asi como no todos tenemos los recursos para tener clases en linea, pc lentas o viejas, otros no tienen pc y utilizan las que ofrece la escuela, entre otras cosas', 34, 31);
 
 -- --------------------------------------------------------
 
@@ -301,7 +457,7 @@ CREATE TABLE `usuarios` (
 
 INSERT INTO `usuarios` (`idusuario`, `username`, `nombreU`, `apellido_paterno`, `apellido_materno`, `fecha_nacimiento`, `email`, `telefono`, `genero`, `password_hash`) VALUES
 (1, 'dan', 'danny', 'Durazo', 'Arvizu', '1991-09-08', 'danny@gmail.com', '6684635851', 'Femenino', '$2y$10$wwMEWJbpAWo0bsulCjszmuj.KlqNEQujuYTqojXKqkFax8Nz0Zi5S'),
-(2, 'luis', '', '', '', '0000-00-00', '', '', '', '$2y$10$T0vHXWvvRMAMfmS83kfHo.3cabJq9FpfwyZdsL525DHS.TOgDnXOO');
+(2, 'luis', 'Luis Eduardo', 'Montiel', 'Urias', '1998-12-12', 'luisurias@gmail.com', '6871106756', 'Masculino', '$2y$10$T0vHXWvvRMAMfmS83kfHo.3cabJq9FpfwyZdsL525DHS.TOgDnXOO');
 
 --
 -- Índices para tablas volcadas
@@ -376,37 +532,37 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `enc_encuestasm`
 --
 ALTER TABLE `enc_encuestasm`
-  MODIFY `idencuesta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `idencuesta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `enc_opcion`
 --
 ALTER TABLE `enc_opcion`
-  MODIFY `idopciones` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `idopciones` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT de la tabla `enc_pregunta`
 --
 ALTER TABLE `enc_pregunta`
-  MODIFY `idpregunta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `idpregunta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT de la tabla `enc_respuesta`
 --
 ALTER TABLE `enc_respuesta`
-  MODIFY `idrespuestas` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `idrespuestas` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT de la tabla `enc_respuestaopcion`
 --
 ALTER TABLE `enc_respuestaopcion`
-  MODIFY `idrespuestaopcion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
+  MODIFY `idrespuestaopcion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=154;
 
 --
 -- AUTO_INCREMENT de la tabla `enc_respuestatexto`
 --
 ALTER TABLE `enc_respuestatexto`
-  MODIFY `idrespuestatexo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `idrespuestatexo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT de la tabla `enc_tipopreguntacatalogo`
