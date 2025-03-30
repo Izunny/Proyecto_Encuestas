@@ -8,6 +8,21 @@ if (!isset($_SESSION['idusuario'])) {
     exit();
 }
 
+$token = $_SESSION['encuesta_token'];
+
+// Primero validar nuevamente el token
+$sql_token = "SELECT idEncuesta FROM enc_tokens WHERE token = :token AND expira > NOW() LIMIT 1";
+$stmt_token = $pdo->prepare($sql_token);
+$stmt_token->execute(['token' => $token]);
+
+if ($stmt_token->rowCount() == 0) {
+    echo json_encode(['status' => 'error', 'message' => 'El token ha expirado o no es válido']);
+    exit;
+}
+
+$row = $stmt_token->fetch(PDO::FETCH_ASSOC);
+$idEncuesta = $row['idEncuesta'];
+
 // Verificar si la petición es POST
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     echo json_encode(["status" => "error", "message" => "Método no permitido"]);
@@ -73,9 +88,15 @@ try {
             ]);
         }
     }
-
+    $sql_delete_token = "DELETE FROM enc_tokens WHERE token = :token";
+    $stmt_delete_token = $pdo->prepare($sql_delete_token);
+    $stmt_delete_token->execute(['token' => $token]);
+    
     $pdo->commit();
     echo json_encode(["status" => "success", "message" => "Respuestas guardadas correctamente."]);
+
+    unset($_SESSION['encuesta_token']);
+
 } catch (Exception $e) {
     $pdo->rollBack();
     echo json_encode(["status" => "error", "message" => "Error al guardar respuestas: " . $e->getMessage()]);

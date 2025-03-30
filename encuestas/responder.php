@@ -12,18 +12,14 @@ $stmt_token->execute(['token' => $token]);
 // Mostrar un error si el token no existe o ha expirado
 if ($stmt_token->rowCount() == 0) {
     header("Location: token_expirado.php");
-        exit;
+    exit;
 }
 
 $row = $stmt_token->fetch(PDO::FETCH_ASSOC);
 $idEncuesta = $row ? $row['idEncuesta'] : null;
 
-
-// Eliminar el token para que no pueda reutilizarse
-$sql_delete_token = "DELETE FROM enc_tokens WHERE token = :token";
-$stmt_delete_token = $pdo->prepare($sql_delete_token);
-$stmt_delete_token->execute(['token' => $token]);
-
+// Guardar el token en sesión para usarlo después al guardar respuestas
+$_SESSION['encuesta_token'] = $token;
 $_SESSION['redirect_url'] = "http://localhost/encuestas/responder.php?token=" . $token;
 
 if (!$idEncuesta) {
