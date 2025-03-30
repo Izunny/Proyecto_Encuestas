@@ -114,9 +114,9 @@ $result = $stmt->get_result();
                         </button>
                     </td>
                      <td>
-                        <button>
-                        Descargar
-                        </button>
+                       <a href='descargar.php?idEncuesta=$idEncuesta' class='btn btn-primary'>
+                            Descargar
+                        </a>
                     </td>
 
                 </tr>";
@@ -181,23 +181,30 @@ $result = $stmt->get_result();
         });
 
         document.getElementById("responderEncuesta").addEventListener("click", function(event) {
+            event.preventDefault();
+            
             const seleccionado = document.querySelector("input[name='seleccionEncuesta']:checked");
-
             if (!seleccionado) {
-                event.preventDefault();
                 mostrarAlerta("Error", "Por favor, selecciona una encuesta.", "error");
                 return;
             }
 
-            const estadoEncuesta = seleccionado.getAttribute("data-estado");
-
-            if (estadoEncuesta === 'N') {
-                event.preventDefault();
-                mostrarAlerta("Error", "Esta encuesta está inactiva y no se puede compartir.", "error");
-                return;
-            }
-
-            window.location.href = "responder.php?id=" + seleccionado.value;
+            fetch("generar_token.php", {
+                method: "POST",
+                body: new URLSearchParams({ idEncuesta: seleccionado.value }),
+                headers: { "Content-Type": "application/x-www-form-urlencoded" }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    navigator.clipboard.writeText(data.url).then(() => {
+                        mostrarAlerta("Éxito", "El enlace ha sido copiado al portapapeles.", "success");
+                    });
+                } else {
+                    mostrarAlerta("Error", data.message, "error");
+                }
+            })
+            .catch(error => console.error("Error:", error));
         });
 
         document.getElementById("eliminarEncuesta").addEventListener("click", function(event) {

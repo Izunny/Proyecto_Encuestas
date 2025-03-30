@@ -2,34 +2,51 @@
 require 'config/database.php';
 session_start();
 
-// Obtener el ID de la encuesta desde la URL
-$idEncuesta = $_GET['id'] ?? null;
+$token = $_GET["token"] ?? '';
+
+// Validar el token
+$sql_token = "SELECT idEncuesta FROM enc_tokens WHERE token = :token AND expira > NOW() LIMIT 1";
+$stmt_token = $pdo->prepare($sql_token);
+$stmt_token->execute(['token' => $token]);
+
+// Mostrar un error si el token no existe o ha expirado
+if ($stmt_token->rowCount() == 0) {
+    header("Location: token_expirado.php");
+        exit;
+}
+
+$row = $stmt_token->fetch(PDO::FETCH_ASSOC);
+$idEncuesta = $row ? $row['idEncuesta'] : null;
+
+
+// Eliminar el token para que no pueda reutilizarse
+$sql_delete_token = "DELETE FROM enc_tokens WHERE token = :token";
+$stmt_delete_token = $pdo->prepare($sql_delete_token);
+$stmt_delete_token->execute(['token' => $token]);
+
+$_SESSION['redirect_url'] = "http://localhost/encuestas/responder.php?token=" . $token;
 
 if (!$idEncuesta) {
     echo "No se ha seleccionado ninguna encuesta.";
     exit;
 }
 
-// guardar la URL 
-$_SESSION['redirect_url'] = "responder.php?id=" . $idEncuesta;
-
+// detalles de la encuesta
 $encuesta = [];
 $preguntas = [];
 
-// obtener la encuesta
-$sql = "SELECT * FROM enc_encuestasm WHERE idencuesta = :id";
-$stmt = $pdo->prepare($sql);
-$stmt->execute(['id' => $idEncuesta]);
-$encuesta = $stmt->fetch(PDO::FETCH_ASSOC);
+$sql_encuesta = "SELECT * FROM enc_encuestasm WHERE idencuesta = :id";
+$stmt_encuesta = $pdo->prepare($sql_encuesta);
+$stmt_encuesta->execute(['id' => $idEncuesta]);
+$encuesta = $stmt_encuesta->fetch(PDO::FETCH_ASSOC);
 
-
-// obtener preguntas
+// las preguntas de la encuesta
 $sql_preguntas = "SELECT * FROM enc_pregunta WHERE idencuesta = :id";
 $stmt_preguntas = $pdo->prepare($sql_preguntas);
 $stmt_preguntas->execute(['id' => $idEncuesta]);
 $preguntas = $stmt_preguntas->fetchAll(PDO::FETCH_ASSOC);
 
-// obtener opciones
+// las opciones de cada pregunta
 $nuevas_preguntas = [];
 foreach ($preguntas as $pregunta) {
     $sql_opciones = "SELECT * FROM enc_opcion WHERE idpregunta = :idpregunta";
@@ -46,7 +63,6 @@ $preguntas = $nuevas_preguntas;
 ?>
 
 
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -56,6 +72,7 @@ $preguntas = $nuevas_preguntas;
     <link rel="stylesheet" href="/encuestas/assets/css/style.css">
 </head>
 <body>
+
 
     <div class="header-container">
         <div class="header_one">
@@ -140,7 +157,7 @@ document.addEventListener("DOMContentLoaded", function() {
         formEncuesta.addEventListener("submit", function(event) {
             event.preventDefault(); 
 
-            const formData = new FormData(this);
+            const formData = new FormData(this); 
 
             fetch("guardar_respuestas.php", {
                 method: "POST",
@@ -148,17 +165,54 @@ document.addEventListener("DOMContentLoaded", function() {
             })
             .then(response => response.json())
             .then(data => {
-                mostrarAlerta(
-                    data.status === "success" ? "¡Éxito!" : "Error",
-                    data.message,
-                    data.status,
-                    data.status === "success" ? "welcome.php" : null
-                );
+                if (data.status === "error") {
+                    
+                    mostrarAlerta("Error", data.message, "error");
+                } else {
+                    // Mostrar alerta con el mensaje de éxito
+                    mostrarAlerta(
+                        "¡Éxito!",
+                        data.message,
+                        "success",
+                        data.status === "success" ? "welcome.php" : null
+                    );
+                }
             })
-            .catch(error => console.error("Error:", error));
+            .catch(error => {
+                console.error("Error:", error);
+                mostrarAlerta("Error", "Ocurrió un error al procesar la encuesta", "error");
+            });
         });
     }
 });
+
+
+
+function mostrarAlerta(titulo, mensaje, tipo = "error", redireccion = null) {
+    const alertBox = document.getElementById("customAlert");
+    const alertTitle = document.getElementById("customAlertTitle");
+    const alertMessage = document.getElementById("customAlertMessage");
+    const alertClose = document.getElementById("customAlertClose");
+
+    if (!alertBox || !alertTitle || !alertMessage || !alertClose) return;
+
+    // Configurar el contenido de la alerta
+    alertTitle.innerText = titulo;
+    alertMessage.innerText = mensaje;
+    
+    // Mostrar la alerta
+    alertBox.style.display = "flex";
+
+    // Cerrar alerta al hacer clic en el botón
+    alertClose.onclick = function () {
+        alertBox.style.display = "none";
+        if (redireccion) {
+            window.location.href = redireccion;
+        }
+    };
+}
+
+
 </script>
 
 </body>
