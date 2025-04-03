@@ -100,7 +100,7 @@ $preguntas = $nuevas_preguntas; // Reemplazar el array original con el corregido
                         <div class="form-group col-10 col-md-1">
                             <label>Fecha:</label><br>
                             <div class="input-group">
-                                <input type="text" data-plugin-datepicker class="form-control" data-input-mask="31/12/9999" placeholder="DD/MM/AAAA" name="fecha" id="fecha" value="<?php echo date('d/m/Y', strtotime($encuesta['fecha'] ?? '')); ?>" readonly>
+                                <input type="text" data-plugin-datepicker class="form-control" data-input-mask="31/12/9999" placeholder="DD/MM/AAAA" name="fecha" id="fecha" value="<?php echo date('d/m/Y', strtotime($encuesta['fecha'] ?? '')); ?>" disabled>
                             </div>
                         </div>
                     </div>
@@ -150,7 +150,7 @@ $preguntas = $nuevas_preguntas; // Reemplazar el array original con el corregido
                     
                     <div class="row">
                         <div class="col-12">
-                            <button type="button" class="btn btn-success mt-3" onclick="agregarPreguntaPanel()">Agregar Pregunta <i class="fa fa-plus"></i></button>
+                            <button type="button" class="btn btn-success mt-3" onclick="agregarPreguntaPanel()" style="margin: 7px 0px 7px 0px;">Agregar Pregunta <i class="fa fa-plus"></i></button>
                             <button type="submit" class="btn btn-primary">Guardar Encuesta <i class="fa fa-save"></i></button>
                             <button type="button" class="btn btn-default" onclick="window.location.href='welcome.php'">
                                 Cancelar <i class="fa fa-ban"></i>

@@ -107,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div class="form-group col-12 col-md-1 ">
                             <label>Fecha:</label><br>
                             <div class="input-group">
-                                <input type="text" data-plugin-datepicker class="form-control" data-input-mask="31/12/9999" placeholder="DD/MM/AAAA" name="fecha" id="fecha" readonly>
+                                <input type="text" data-plugin-datepicker class="form-control" data-input-mask="31/12/9999" placeholder="DD/MM/AAAA" name="fecha" id="fecha" disabled>
                             </div>
                         </div>
                     </div>
@@ -119,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                     <div class="row">
                         <div class="col-12">
-                            <button type="button" class="btn btn-success mt-3" onclick="agregarPreguntaPanel()">Agregar Pregunta <i class="fa fa-plus"></i></button>
+                            <button type="button" class="btn btn-success mt-3" onclick="agregarPreguntaPanel()" style="margin: 7px 0px 7px 0px;">Agregar Pregunta <i class="fa fa-plus"></i></button>
                             <button type="submit" class="btn btn-primary">Guardar Encuesta <i class="fa fa-save"></i></button>
                             <button type="button" class="btn btn-default" onclick="window.location.href='welcome.php'">
                                 Cancelar <i class="fa fa-ban"></i>
@@ -205,9 +205,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 const opcionesHTML = `
                     <div class="form-group col-10 col-md-2">
                         <label>Opciones:</label>
-                        <button type="button" class="btn btn-default" onclick="agregarOpcion(${idPregunta})">Agregar otra opción</button>
+                        <button type="button" class="btn btn-default" onclick="agregarOpcion(${idPregunta})"style="margin: 0px 0px 7px 0px;">Agregar otra opción</button>
                         <div class="opcion-item mt-2">
-                            <input type="text" name="preguntas[${idPregunta}][opciones][]" class="form-control" placeholder="Ingrese una opción">
+                            <input type="text" name="preguntas[${idPregunta}][opciones][]" class="form-control" placeholder="Ingrese una opción" style="margin-right: 7px;">
                             <button type="button" class="btn btn-default" onclick="eliminarOpcion(this)">Eliminar</button>
                         </div>
                     </div>
@@ -219,10 +219,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         function agregarOpcion(idPregunta) {
             const contenedorOpciones = document.getElementById(`opcionesPregunta${idPregunta}`);
             const nuevaOpcion = document.createElement('div');
-            nuevaOpcion.classList.add('opcion-item', 'mt-2');
+            nuevaOpcion.classList.add('opcion-item', 'mt-2' );
             nuevaOpcion.innerHTML = `
-                <input type="text" name="preguntas[${idPregunta}][opciones][]" class="form-control" placeholder="Ingrese una opción" >
-                <button type="button" class="btn btn-default" onclick="eliminarOpcion(this)">Eliminar</button>
+                <input type="text" name="preguntas[${idPregunta}][opciones][]" class="form-control" placeholder="Ingrese una opción" style="margin-left: 10px;">
+                <button type="button" class="btn btn-default" onclick="eliminarOpcion(this)" style="margin-left: 10px;">Eliminar</button>
             `;
             contenedorOpciones.appendChild(nuevaOpcion);
         }
